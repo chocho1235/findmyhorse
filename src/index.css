@@ -3,20 +3,21 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
 
-/* Equine Legal Brand Design System */
+/* EquineClause Design System */
 
 @layer base {
   :root {
     /* Brand Colors */
-    --equine-navy: 15 23% 12%;
-    --equine-navy-light: 15 23% 20%;
-    --equine-gold: 45 100% 50%;
-    --equine-gold-light: 45 100% 60%;
-    --equine-cream: 45 40% 96%;
-    --equine-sage: 120 10% 45%;
-    --equine-sage-light: 120 10% 65%;
+    --equine-navy: 220 30% 15%;
+    --equine-navy-light: 220 25% 25%;
+    --equine-forest: 140 30% 25%;
+    --equine-forest-light: 140 25% 40%;
+    --equine-sage: 140 15% 60%;
+    --equine-cream: 45 35% 96%;
+    --equine-warm: 25 40% 92%;
+    --equine-accent: 160 40% 35%;
     
     --background: var(--equine-cream);
     --foreground: var(--equine-navy);
@@ -27,24 +28,24 @@
     --popover: 0 0% 100%;
     --popover-foreground: var(--equine-navy);
 
-    --primary: var(--equine-gold);
-    --primary-foreground: var(--equine-navy);
+    --primary: var(--equine-accent);
+    --primary-foreground: var(--equine-cream);
 
-    --secondary: var(--equine-sage-light);
+    --secondary: var(--equine-sage);
     --secondary-foreground: var(--equine-navy);
 
-    --muted: 45 20% 94%;
-    --muted-foreground: var(--equine-sage);
+    --muted: var(--equine-warm);
+    --muted-foreground: var(--equine-forest);
 
-    --accent: var(--equine-gold-light);
-    --accent-foreground: var(--equine-navy);
+    --accent: var(--equine-forest-light);
+    --accent-foreground: var(--equine-cream);
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 45 20% 88%;
-    --input: 45 20% 88%;
-    --ring: var(--equine-gold);
+    --border: 140 15% 85%;
+    --input: 140 15% 90%;
+    --ring: var(--equine-accent);
 
     --radius: 0.5rem;
   }
@@ -73,15 +74,15 @@
 
 @layer components {
   .hero-gradient {
-    background: linear-gradient(135deg, hsl(var(--equine-navy)) 0%, hsl(var(--equine-navy-light)) 100%);
+    background: linear-gradient(135deg, hsl(var(--equine-navy)) 0%, hsl(var(--equine-forest)) 100%);
   }
   
-  .gold-accent {
-    background: linear-gradient(90deg, hsl(var(--equine-gold)) 0%, hsl(var(--equine-gold-light)) 100%);
+  .accent-gradient {
+    background: linear-gradient(90deg, hsl(var(--equine-accent)) 0%, hsl(var(--equine-forest-light)) 100%);
   }
   
   .section-divider {
-    background: linear-gradient(90deg, transparent 0%, hsl(var(--equine-gold)) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, hsl(var(--equine-accent)) 50%, transparent 100%);
     height: 2px;
   }
 }

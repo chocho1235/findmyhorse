@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Scale, Menu, X, Phone, Mail } from 'lucide-react';
+import { FileText, Menu, X, BookOpen, Users } from 'lucide-react';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,26 +10,26 @@ const Navigation = () => {
 
   const navItems = [
     { label: 'Home', path: '/' },
-    { label: 'Services', path: '/services' },
+    { label: 'Learn', path: '/learn' },
+    { label: 'Tools', path: '/tools' },
     { label: 'Resources', path: '/resources' },
-    { label: 'About', path: '/about' },
-    { label: 'Contact', path: '/contact' }
+    { label: 'Case Studies', path: '/cases' }
   ];
 
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="bg-equine-navy shadow-lg sticky top-0 z-50">
+    <nav className="bg-white shadow-md sticky top-0 z-50 border-b border-equine-sage">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="bg-equine-gold p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
-              <Scale className="h-8 w-8 text-equine-navy" />
+            <div className="bg-equine-accent p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
+              <FileText className="h-6 w-6 text-white" />
             </div>
-            <div className="text-equine-cream">
-              <h1 className="text-xl font-heading font-bold">Equine Legal</h1>
-              <p className="text-xs text-equine-gold">Advisors</p>
+            <div className="text-equine-navy">
+              <h1 className="text-xl font-heading font-bold">EquineClause</h1>
+              <p className="text-xs text-equine-forest">Legal Clarity for Horse Sales</p>
             </div>
           </Link>
 
@@ -41,26 +41,23 @@ const Navigation = () => {
                 to={item.path}
                 className={`font-medium transition-colors duration-200 relative ${
                   isActive(item.path)
-                    ? 'text-equine-gold'
-                    : 'text-equine-cream hover:text-equine-gold'
+                    ? 'text-equine-accent'
+                    : 'text-equine-navy hover:text-equine-accent'
                 }`}
               >
                 {item.label}
                 {isActive(item.path) && (
-                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-equine-gold rounded-full" />
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-equine-accent rounded-full" />
                 )}
               </Link>
             ))}
           </div>
 
-          {/* Contact Info & CTA */}
+          {/* CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-equine-cream text-sm">
-              <Phone className="h-4 w-4" />
-              <span>(555) 123-4567</span>
-            </div>
-            <Button className="bg-equine-gold text-equine-navy hover:bg-equine-gold-light font-semibold">
-              Free Consultation
+            <Button className="bg-equine-accent text-white hover:bg-equine-forest font-semibold">
+              <BookOpen className="mr-2 h-4 w-4" />
+              Start Learning
             </Button>
           </div>
 
@@ -68,7 +65,7 @@ const Navigation = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-equine-cream hover:text-equine-gold transition-colors"
+              className="text-equine-navy hover:text-equine-accent transition-colors"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -77,7 +74,7 @@ const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden bg-equine-navy-light rounded-lg mx-4 mb-4 p-4 animate-scale-in">
+          <div className="md:hidden bg-equine-warm rounded-lg mx-4 mb-4 p-4 animate-scale-in">
             <div className="space-y-4">
               {navItems.map((item) => (
                 <Link
@@ -85,21 +82,18 @@ const Navigation = () => {
                   to={item.path}
                   className={`block font-medium transition-colors ${
                     isActive(item.path)
-                      ? 'text-equine-gold'
-                      : 'text-equine-cream hover:text-equine-gold'
+                      ? 'text-equine-accent'
+                      : 'text-equine-navy hover:text-equine-accent'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
                 </Link>
               ))}
-              <div className="pt-4 border-t border-equine-sage-light">
-                <div className="flex items-center space-x-2 text-equine-cream text-sm mb-3">
-                  <Phone className="h-4 w-4" />
-                  <span>(555) 123-4567</span>
-                </div>
-                <Button className="w-full bg-equine-gold text-equine-navy hover:bg-equine-gold-light font-semibold">
-                  Free Consultation
+              <div className="pt-4 border-t border-equine-sage">
+                <Button className="w-full bg-equine-accent text-white hover:bg-equine-forest font-semibold">
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  Start Learning
                 </Button>
               </div>
             </div>
