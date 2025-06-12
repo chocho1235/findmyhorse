@@ -1,10 +1,12 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Shield, CheckCircle, BookOpen, Users, Download, AlertTriangle } from 'lucide-react';
+import { ArrowRight, Shield, BookOpen, Users, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+
+const QuickHelp = lazy(() => import('@/components/QuickHelp'));
 
 const Index = () => {
   const featuredResources = [
@@ -18,7 +20,7 @@ const Index = () => {
     {
       title: "Return & Refund Guide",
       description: "Understanding your rights when a horse purchase goes wrong",
-      icon: CheckCircle,
+      icon: BookOpen,
       link: "/learn",
       type: "Learning Guide"
     },
@@ -31,20 +33,20 @@ const Index = () => {
     }
   ];
 
-  const quickHelp = [
+  const quickHelpItems = [
     {
-      question: "Can I return a horse after purchase?",
-      answer: "It depends on your contract terms, state laws, and the specific circumstances...",
+      question: "Can I return a horse after purchase in the UK?",
+      answer: "Your rights depend on whether you bought from a business (protected by Consumer Rights Act 2015) or private seller. Business purchases have stronger protections, including a 30-day right to reject. Private sales fall under general contract law and the Misrepresentation Act 1967.",
       link: "/learn/returns"
     },
     {
-      question: "What should be in a horse sale contract?",
-      answer: "Key elements include health guarantees, trial periods, and return policies...",
+      question: "What should be in a UK horse sale contract?",
+      answer: "A proper UK horse sale contract must include the horse's passport details, microchip number, seller's status (business/private), VAT details if applicable, and clear terms about condition and fitness for purpose. Additional requirements apply under the Consumer Rights Act 2015 for business sellers.",
       link: "/learn/contracts"
     },
     {
-      question: "How do I handle a dispute with a seller?",
-      answer: "Start with documentation, then follow these escalation steps...",
+      question: "How do I handle a dispute with a UK seller?",
+      answer: "Start by documenting everything and determining your legal position under UK law. Send a formal Letter Before Action, consider mediation through the British Horse Society, and if needed, seek advice from an equine solicitor. Different procedures apply for business vs private sales.",
       link: "/learn/disputes"
     }
   ];
@@ -64,14 +66,18 @@ const Index = () => {
             Free, approachable resources to help you navigate returns, contracts, and disputes when buying or selling horses. No legal jargon, just practical clarity.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest-light font-semibold px-8 py-4 text-lg">
-              <BookOpen className="mr-2 h-5 w-5" />
-              Start Learning
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-equine-navy font-semibold px-8 py-4 text-lg">
-              Browse Tools
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <Link to="/learn">
+              <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest font-semibold px-8 py-4 text-lg w-full">
+                <BookOpen className="mr-2 h-5 w-5" />
+                Start Learning
+              </Button>
+            </Link>
+            <Link to="/tools">
+              <Button size="lg" variant="outline" className="border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white font-semibold px-8 py-4 text-lg w-full">
+                Browse Tools
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -119,45 +125,28 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Quick Help */}
-      <section className="py-20 bg-equine-warm">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-heading font-bold text-equine-navy mb-4">
-              Need Quick Answers?
-            </h2>
-            <p className="text-lg text-equine-forest">
-              Get immediate clarity on the most common horse transaction questions.
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            {quickHelp.map((item, index) => (
-              <Card key={index} className="shadow-md border-0 bg-white">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="bg-equine-accent p-2 rounded-lg">
-                      <AlertTriangle className="h-5 w-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-heading font-semibold text-equine-navy text-lg mb-2">
-                        {item.question}
-                      </h3>
-                      <p className="text-equine-forest mb-4">
-                        {item.answer}
-                      </p>
-                      <Link to={item.link} className="text-equine-accent hover:text-equine-forest font-semibold inline-flex items-center">
-                        Read full answer
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </Link>
-                    </div>
+      {/* Quick Help Section */}
+      <Suspense fallback={
+        <div className="py-20 bg-equine-warm">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-equine-sage/30 rounded w-64 mx-auto mb-4"></div>
+              <div className="h-4 bg-equine-sage/30 rounded w-96 mx-auto mb-12"></div>
+              <div className="space-y-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="bg-white rounded-lg p-6">
+                    <div className="h-6 bg-equine-sage/30 rounded w-3/4 mb-4"></div>
+                    <div className="h-4 bg-equine-sage/30 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-equine-sage/30 rounded w-2/3"></div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </section>
+      }>
+        <QuickHelp items={quickHelpItems} />
+      </Suspense>
 
       {/* Trust & Community */}
       <section className="py-20 bg-white">
@@ -205,13 +194,17 @@ const Index = () => {
             Start with our comprehensive buyer's guide or explore interactive tools to protect your next horse transaction.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest-light font-semibold px-8 py-4 text-lg">
-              <BookOpen className="mr-2 h-5 w-5" />
-              Begin Learning Journey
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-equine-navy font-semibold px-8 py-4 text-lg">
-              Download Free Templates
-            </Button>
+            <Link to="/learn">
+              <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest font-semibold px-8 py-4 text-lg w-full">
+                <BookOpen className="mr-2 h-5 w-5" />
+                Begin Learning Journey
+              </Button>
+            </Link>
+            <Link to="/resources">
+              <Button size="lg" variant="outline" className="border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white font-semibold px-8 py-4 text-lg w-full">
+                Download Free Templates
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

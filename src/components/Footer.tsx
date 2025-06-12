@@ -1,9 +1,35 @@
-
 import { Link } from 'react-router-dom';
 import { FileText, BookOpen, Users, Heart } from 'lucide-react';
+import React, { useState } from 'react';
+import Modal from './ui/Modal';
 
 const Footer = () => {
+  const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+
+  const DisclaimerContent = () => (
+    <div className="space-y-4 text-sm text-gray-700">
+      <p>The content provided on this website is for informational purposes only and does not constitute legal advice. We are not a law firm and do not provide legal services.</p>
+      <p>While we strive to keep the information up-to-date and correct, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose.</p>
+      <p>Any reliance you place on such information is therefore strictly at your own risk. In no event will we be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of, or in connection with, the use of this website.</p>
+      <p>For specific legal advice, you should consult with a qualified solicitor. The use of this website does not create a solicitor-client relationship.</p>
+    </div>
+  );
+
+  const PrivacyContent = () => (
+    <div className="space-y-4 text-sm text-gray-700">
+      <p>We are committed to protecting your privacy. This policy outlines how we handle your personal information.</p>
+      <h3 className="font-semibold">Information We Collect</h3>
+      <p>We may collect personal information such as your name and email address when you subscribe to our newsletter or use our contact forms. We also collect non-personal information through cookies to improve our website's functionality.</p>
+      <h3 className="font-semibold">How We Use Your Information</h3>
+      <p>Your information is used to personalize your experience, improve our website, and send periodic emails. We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information.</p>
+      <h3 className="font-semibold">Your Consent</h3>
+      <p>By using our site, you consent to our privacy policy.</p>
+    </div>
+  );
+
   return (
+    <>
     <footer className="bg-equine-navy text-equine-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -68,14 +94,29 @@ const Footer = () => {
               © 2024 EquineClause. All resources provided for educational purposes.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0 text-sm">
-              <Link to="/disclaimer" className="text-equine-sage hover:text-equine-cream transition-colors">Legal Disclaimer</Link>
-              <Link to="/privacy" className="text-equine-sage hover:text-equine-cream transition-colors">Privacy</Link>
+                <button onClick={() => setIsDisclaimerOpen(true)} className="text-equine-sage hover:text-equine-cream transition-colors">Legal Disclaimer</button>
+                <button onClick={() => setIsPrivacyOpen(true)} className="text-equine-sage hover:text-equine-cream transition-colors">Privacy</button>
               <Link to="/about" className="text-equine-sage hover:text-equine-cream transition-colors">About</Link>
             </div>
           </div>
         </div>
       </div>
     </footer>
+      <Modal 
+        isOpen={isDisclaimerOpen} 
+        onClose={() => setIsDisclaimerOpen(false)} 
+        title="Legal Disclaimer"
+      >
+        <DisclaimerContent />
+      </Modal>
+      <Modal 
+        isOpen={isPrivacyOpen} 
+        onClose={() => setIsPrivacyOpen(false)} 
+        title="Privacy Policy"
+      >
+        <PrivacyContent />
+      </Modal>
+    </>
   );
 };
 

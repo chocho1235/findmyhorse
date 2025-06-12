@@ -1,21 +1,22 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Wrench, CheckCircle, FileText, Calculator, Shield, AlertTriangle } from 'lucide-react';
+import { ArrowRight, Wrench, CheckCircle, FileText, Calculator, Shield, AlertTriangle, ShieldQuestion } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { Link } from 'react-router-dom';
 
 const Tools = () => {
   const interactiveTools = [
     {
-      title: "Contract Builder",
-      description: "Step-by-step tool to create a customized horse sale agreement",
-      difficulty: "Easy",
-      time: "10-15 minutes",
-      icon: FileText,
+      title: "Dispute Resolution Wizard",
+      description: "Get personalized steps for resolving your horse purchase dispute",
+      difficulty: "Intermediate",
+      time: "8-12 minutes",
+      icon: ShieldQuestion,
       featured: true,
-      status: "Available"
+      status: "Available",
+      link: "/wizards/dispute-resolution"
     },
     {
       title: "Buyer Protection Checklist",
@@ -24,7 +25,8 @@ const Tools = () => {
       time: "5 minutes",
       icon: Shield,
       featured: true,
-      status: "Available"
+      status: "Coming Soon",
+      link: "#"
     },
     {
       title: "Return Rights Calculator",
@@ -33,7 +35,8 @@ const Tools = () => {
       time: "3 minutes",
       icon: Calculator,
       featured: false,
-      status: "Available"
+      status: "Coming Soon",
+      link: "#"
     },
     {
       title: "Red Flag Detector",
@@ -42,16 +45,18 @@ const Tools = () => {
       time: "2 minutes",
       icon: AlertTriangle,
       featured: false,
-      status: "Available"
+      status: "Coming Soon",
+      link: "#"
     },
     {
-      title: "Dispute Resolution Wizard",
-      description: "Get personalized steps for resolving your horse purchase dispute",
-      difficulty: "Intermediate",
-      time: "8-12 minutes",
-      icon: Wrench,
+      title: "Contract Builder",
+      description: "Step-by-step tool to create a customized horse sale agreement",
+      difficulty: "Easy",
+      time: "10-15 minutes",
+      icon: FileText,
       featured: false,
-      status: "Coming Soon"
+      status: "Coming Soon",
+      link: "#"
     }
   ];
 
@@ -100,43 +105,45 @@ const Tools = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
             {interactiveTools.filter(tool => tool.featured).map((tool, index) => (
-              <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 group cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="bg-equine-accent p-3 rounded-lg group-hover:scale-110 transition-transform duration-300">
-                        <tool.icon className="h-6 w-6 text-white" />
+              <Link to={tool.link} key={index} className="block">
+                <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 group cursor-pointer h-full">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-equine-accent p-3 rounded-lg group-hover:scale-110 transition-transform duration-300">
+                          <tool.icon className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="flex space-x-2">
+                          <Badge className="bg-green-100 text-green-800">
+                            {tool.difficulty}
+                          </Badge>
+                          <Badge variant="outline" className="border-equine-accent text-equine-accent">
+                            {tool.status}
+                          </Badge>
+                        </div>
                       </div>
-                      <div className="flex space-x-2">
-                        <Badge className="bg-green-100 text-green-800">
-                          {tool.difficulty}
-                        </Badge>
-                        <Badge variant="outline" className="border-equine-accent text-equine-accent">
-                          {tool.status}
-                        </Badge>
-                      </div>
+                      <span className="text-equine-forest text-sm">
+                        {tool.time}
+                      </span>
                     </div>
-                    <span className="text-equine-forest text-sm">
-                      {tool.time}
-                    </span>
-                  </div>
-                  <CardTitle className="text-xl font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
-                    {tool.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-equine-forest mb-6">
-                    {tool.description}
-                  </p>
-                  <Button 
-                    className="w-full bg-equine-accent text-white hover:bg-equine-forest"
-                    disabled={tool.status === "Coming Soon"}
-                  >
-                    {tool.status === "Coming Soon" ? "Coming Soon" : "Start Tool"}
-                    {tool.status !== "Coming Soon" && <ArrowRight className="ml-2 h-4 w-4" />}
-                  </Button>
-                </CardContent>
-              </Card>
+                    <CardTitle className="text-xl font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
+                      {tool.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-equine-forest mb-6">
+                      {tool.description}
+                    </p>
+                    <Button 
+                      className="w-full bg-equine-accent text-white hover:bg-equine-forest"
+                      disabled={tool.status === "Coming Soon"}
+                    >
+                      {tool.status === "Coming Soon" ? "Coming Soon" : "Start Tool"}
+                      {tool.status !== "Coming Soon" && <ArrowRight className="ml-2 h-4 w-4" />}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
@@ -185,50 +192,52 @@ const Tools = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {interactiveTools.map((tool, index) => (
-              <Card key={index} className="shadow-md hover:shadow-lg transition-all duration-300 border-0 group cursor-pointer">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge 
-                      className={
-                        tool.status === "Available" 
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-800"
-                      }
-                    >
-                      {tool.status}
-                    </Badge>
-                    <span className="text-equine-forest text-sm">
-                      {tool.time}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="bg-equine-accent p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
-                      <tool.icon className="h-5 w-5 text-white" />
+              <Link to={tool.link} key={index} className="block">
+                <Card key={index} className="shadow-md hover:shadow-lg transition-all duration-300 border-0 group cursor-pointer h-full">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge 
+                        className={
+                          tool.status === "Available" 
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }
+                      >
+                        {tool.status}
+                      </Badge>
+                      <span className="text-equine-forest text-sm">
+                        {tool.time}
+                      </span>
                     </div>
-                    <CardTitle className="text-lg font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
-                      {tool.title}
-                    </CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-equine-forest text-sm mb-4">
-                    {tool.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <Badge className="bg-blue-100 text-blue-800">
-                      {tool.difficulty}
-                    </Badge>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white"
-                      disabled={tool.status === "Coming Soon"}
-                    >
-                      {tool.status === "Coming Soon" ? "Soon" : "Use Tool"}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div className="bg-equine-accent p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
+                        <tool.icon className="h-5 w-5 text-white" />
+                      </div>
+                      <CardTitle className="text-lg font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
+                        {tool.title}
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-equine-forest text-sm mb-4">
+                      {tool.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <Badge className="bg-blue-100 text-blue-800">
+                        {tool.difficulty}
+                      </Badge>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white"
+                        disabled={tool.status === "Coming Soon"}
+                      >
+                        {tool.status === "Coming Soon" ? "Soon" : "Use Tool"}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -171,11 +170,23 @@ const Resources = () => {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Tabs defaultValue="templates" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-12 bg-equine-cream">
-              <TabsTrigger value="templates" className="data-[state=active]:bg-equine-gold data-[state=active]:text-equine-navy">Templates</TabsTrigger>
-              <TabsTrigger value="guidelines" className="data-[state=active]:bg-equine-gold data-[state=active]:text-equine-navy">Guidelines</TabsTrigger>
-              <TabsTrigger value="faq" className="data-[state=active]:bg-equine-gold data-[state=active]:text-equine-navy">FAQ</TabsTrigger>
-              <TabsTrigger value="updates" className="data-[state=active]:bg-equine-gold data-[state=active]:text-equine-navy">Updates</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-4 mb-12 p-2 bg-equine-navy/5 rounded-lg">
+              <TabsTrigger value="templates" className="flex items-center justify-center gap-2 py-3 px-4 rounded-md transition-all data-[state=active]:bg-equine-accent data-[state=active]:text-white data-[state=active]:shadow-lg">
+                <FileText className="h-5 w-5" />
+                <span className="font-semibold">Templates</span>
+              </TabsTrigger>
+              <TabsTrigger value="guidelines" className="flex items-center justify-center gap-2 py-3 px-4 rounded-md transition-all data-[state=active]:bg-equine-accent data-[state=active]:text-white data-[state=active]:shadow-lg">
+                <BookOpen className="h-5 w-5" />
+                <span className="font-semibold">Guidelines</span>
+              </TabsTrigger>
+              <TabsTrigger value="faq" className="flex items-center justify-center gap-2 py-3 px-4 rounded-md transition-all data-[state=active]:bg-equine-accent data-[state=active]:text-white data-[state=active]:shadow-lg">
+                <AlertCircle className="h-5 w-5" />
+                <span className="font-semibold">FAQ</span>
+              </TabsTrigger>
+              <TabsTrigger value="updates" className="flex items-center justify-center gap-2 py-3 px-4 rounded-md transition-all data-[state=active]:bg-equine-accent data-[state=active]:text-white data-[state=active]:shadow-lg">
+                <Calendar className="h-5 w-5" />
+                <span className="font-semibold">Updates</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="templates">
