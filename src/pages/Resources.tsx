@@ -138,7 +138,33 @@ const Resources = () => {
 
   const filteredTemplates = legalTemplates.filter(template =>
     template.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    template.category.toLowerCase().includes(searchTerm.toLowerCase())
+    template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    template.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredGuidelines = guidelines.filter(guide =>
+    guide.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    guide.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    guide.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredFaqs = faqs.filter(faq =>
+    faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    faq.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    faq.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredUpdates = recentUpdates.filter(update =>
+    update.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    update.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    update.type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const NoResults = () => (
+    <div className="text-center py-12">
+      <h3 className="text-xl font-semibold text-equine-navy">No results found</h3>
+      <p className="text-equine-sage mt-2">Try adjusting your search term.</p>
+    </div>
   );
 
   return (
@@ -196,34 +222,38 @@ const Resources = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredTemplates.map((template, index) => (
-                  <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 border-0">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="bg-equine-gold text-equine-navy px-3 py-1 rounded-full text-xs font-semibold">
-                          {template.category}
-                        </span>
-                        <FileText className="h-5 w-5 text-equine-sage" />
-                      </div>
-                      <CardTitle className="text-lg font-heading text-equine-navy">
-                        {template.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-equine-sage mb-4 text-sm">
-                        {template.description}
-                      </p>
-                      <div className="flex justify-between items-center text-xs text-equine-sage mb-4">
-                        <span>{template.format} • {template.pages} pages</span>
-                        <span>Updated {template.lastUpdated}</span>
-                      </div>
-                      <Button className="w-full bg-equine-gold text-equine-navy hover:bg-equine-gold-light">
-                        <Download className="mr-2 h-4 w-4" />
-                        Download Template
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
+                {filteredTemplates.length > 0 ? (
+                  filteredTemplates.map((template, index) => (
+                    <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 border-0">
+                      <CardHeader className="pb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="bg-equine-gold text-equine-navy px-3 py-1 rounded-full text-xs font-semibold">
+                            {template.category}
+                          </span>
+                          <FileText className="h-5 w-5 text-equine-sage" />
+                        </div>
+                        <CardTitle className="text-lg font-heading text-equine-navy">
+                          {template.title}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-equine-sage mb-4 text-sm">
+                          {template.description}
+                        </p>
+                        <div className="flex justify-between items-center text-xs text-equine-sage mb-4">
+                          <span>{template.format} • {template.pages} pages</span>
+                          <span>Updated {template.lastUpdated}</span>
+                        </div>
+                        <Button className="w-full bg-equine-gold text-equine-navy hover:bg-equine-gold-light">
+                          <Download className="mr-2 h-4 w-4" />
+                          Download Template
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <NoResults />
+                )}
               </div>
             </TabsContent>
 
@@ -234,40 +264,44 @@ const Resources = () => {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {guidelines.map((guide, index) => (
-                  <Card key={index} className={`shadow-lg hover:shadow-xl transition-all duration-300 border-0 ${guide.featured ? 'ring-2 ring-equine-gold' : ''}`}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="bg-equine-navy text-equine-cream px-3 py-1 rounded-full text-xs font-semibold">
-                          {guide.category}
-                        </span>
-                        {guide.featured && (
-                          <span className="bg-equine-gold text-equine-navy px-2 py-1 rounded-full text-xs font-semibold">
-                            Featured
+                {filteredGuidelines.length > 0 ? (
+                  filteredGuidelines.map((guide, index) => (
+                    <Card key={index} className={`shadow-lg hover:shadow-xl transition-all duration-300 border-0 ${guide.featured ? 'ring-2 ring-equine-gold' : ''}`}>
+                      <CardHeader>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="bg-equine-navy text-equine-cream px-3 py-1 rounded-full text-xs font-semibold">
+                            {guide.category}
                           </span>
-                        )}
-                      </div>
-                      <CardTitle className="text-xl font-heading text-equine-navy">
-                        {guide.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-equine-sage mb-4">
-                        {guide.summary}
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-equine-sage flex items-center">
-                          <BookOpen className="mr-1 h-4 w-4" />
-                          {guide.readTime}
-                        </span>
-                        <Button variant="outline" className="border-equine-gold text-equine-gold hover:bg-equine-gold hover:text-equine-navy">
-                          Read More
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                          {guide.featured && (
+                            <span className="bg-equine-gold text-equine-navy px-2 py-1 rounded-full text-xs font-semibold">
+                              Featured
+                            </span>
+                          )}
+                        </div>
+                        <CardTitle className="text-xl font-heading text-equine-navy">
+                          {guide.title}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-equine-sage mb-4">
+                          {guide.summary}
+                        </p>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-equine-sage flex items-center">
+                            <BookOpen className="mr-1 h-4 w-4" />
+                            {guide.readTime}
+                          </span>
+                          <Button variant="outline" className="border-equine-gold text-equine-gold hover:bg-equine-gold hover:text-equine-navy">
+                            Read More
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <NoResults />
+                )}
               </div>
             </TabsContent>
 
@@ -278,30 +312,34 @@ const Resources = () => {
               </div>
 
               <div className="space-y-6">
-                {faqs.map((faq, index) => (
-                  <Card key={index} className="shadow-lg border-0">
-                    <CardContent className="p-6">
-                      <div className="flex items-start space-x-4">
-                        <div className="bg-equine-gold p-2 rounded-lg">
-                          <AlertCircle className="h-5 w-5 text-equine-navy" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-heading font-semibold text-equine-navy text-lg">
-                              {faq.question}
-                            </h3>
-                            <span className="bg-equine-cream text-equine-navy px-3 py-1 rounded-full text-xs font-semibold">
-                              {faq.category}
-                            </span>
+                {filteredFaqs.length > 0 ? (
+                  filteredFaqs.map((faq, index) => (
+                    <Card key={index} className="shadow-lg border-0">
+                      <CardContent className="p-6">
+                        <div className="flex items-start space-x-4">
+                          <div className="bg-equine-gold p-2 rounded-lg">
+                            <AlertCircle className="h-5 w-5 text-equine-navy" />
                           </div>
-                          <p className="text-equine-sage leading-relaxed">
-                            {faq.answer}
-                          </p>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-3">
+                              <h3 className="font-heading font-semibold text-equine-navy text-lg">
+                                {faq.question}
+                              </h3>
+                              <span className="bg-equine-cream text-equine-navy px-3 py-1 rounded-full text-xs font-semibold">
+                                {faq.category}
+                              </span>
+                            </div>
+                            <p className="text-equine-sage leading-relaxed">
+                              {faq.answer}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <NoResults />
+                )}
               </div>
             </TabsContent>
 
@@ -312,33 +350,37 @@ const Resources = () => {
               </div>
 
               <div className="space-y-6">
-                {recentUpdates.map((update, index) => (
-                  <Card key={index} className="shadow-lg border-0">
-                    <CardContent className="p-6">
-                      <div className="flex items-start space-x-4">
-                        <div className="bg-equine-navy p-2 rounded-lg">
-                          <Calendar className="h-5 w-5 text-equine-cream" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-heading font-semibold text-equine-navy text-lg">
-                              {update.title}
-                            </h3>
-                            <span className="bg-equine-gold text-equine-navy px-3 py-1 rounded-full text-xs font-semibold">
-                              {update.type}
+                {filteredUpdates.length > 0 ? (
+                  filteredUpdates.map((update, index) => (
+                    <Card key={index} className="shadow-lg border-0">
+                      <CardContent className="p-6">
+                        <div className="flex items-start space-x-4">
+                          <div className="bg-equine-navy p-2 rounded-lg">
+                            <Calendar className="h-5 w-5 text-equine-cream" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-3">
+                              <h3 className="font-heading font-semibold text-equine-navy text-lg">
+                                {update.title}
+                              </h3>
+                              <span className="bg-equine-gold text-equine-navy px-3 py-1 rounded-full text-xs font-semibold">
+                                {update.type}
+                              </span>
+                            </div>
+                            <p className="text-equine-sage mb-3">
+                              {update.summary}
+                            </p>
+                            <span className="text-sm text-equine-sage">
+                              Published: {update.date}
                             </span>
                           </div>
-                          <p className="text-equine-sage mb-3">
-                            {update.summary}
-                          </p>
-                          <span className="text-sm text-equine-sage">
-                            Published: {update.date}
-                          </span>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <NoResults />
+                )}
               </div>
             </TabsContent>
           </Tabs>
@@ -346,17 +388,22 @@ const Resources = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="hero-gradient py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-heading font-bold text-equine-cream mb-6">
-            Need Personalized Legal Advice?
-          </h2>
-          <p className="text-xl text-equine-sage-light mb-8">
-            While our resources provide valuable information, every situation is unique. Contact us for personalized legal guidance.
-          </p>
-          <Button size="lg" className="bg-equine-gold text-equine-navy hover:bg-equine-gold-light font-semibold px-8 py-4 text-lg">
-            Schedule Consultation
-          </Button>
+      <section className="py-20 bg-equine-warm">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Card className="p-8 md:p-12 shadow-xl border-0 bg-white">
+                <div className="text-center">
+                    <h2 className="text-3xl lg:text-4xl font-heading font-bold text-equine-navy mb-6">
+                        Take the Next Step
+                    </h2>
+                    <p className="text-xl text-equine-forest mb-8 max-w-2xl mx-auto">
+                        While our resources offer a strong foundation, equine law can be complex. For situations requiring tailored advice, consider connecting with a specialist.
+                    </p>
+                    <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest font-semibold px-8 py-4 text-lg">
+                        Explore Professional Services
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                </div>
+            </Card>
         </div>
       </section>
 

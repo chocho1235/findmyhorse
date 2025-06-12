@@ -1,10 +1,98 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Wrench, CheckCircle, FileText, Calculator, Shield, AlertTriangle, ShieldQuestion } from 'lucide-react';
+import { ArrowRight, Wrench, CheckCircle, FileText, Calculator, Shield, AlertTriangle, ShieldQuestion, User } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+const ToolCard = ({ tool }) => {
+  const { user } = useAuth();
+  
+  const cardContent = (
+    <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 group cursor-pointer h-full">
+      <CardHeader>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
+            <div className="bg-equine-accent p-3 rounded-lg group-hover:scale-110 transition-transform duration-300">
+              <tool.icon className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex space-x-2">
+              <Badge className="bg-green-100 text-green-800">
+                {tool.difficulty}
+              </Badge>
+              <Badge variant="outline" className="border-equine-accent text-equine-accent">
+                {tool.status}
+              </Badge>
+            </div>
+          </div>
+          <span className="text-equine-forest text-sm">
+            {tool.time}
+          </span>
+        </div>
+        <CardTitle className="text-xl font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
+          {tool.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-equine-forest mb-6">
+          {tool.description}
+        </p>
+        <Button 
+          className="w-full bg-equine-accent text-white hover:bg-equine-forest"
+          disabled={tool.status === "Coming Soon"}
+        >
+          {tool.status === "Coming Soon" ? "Coming Soon" : "Start Tool"}
+          {tool.status !== "Coming Soon" && <ArrowRight className="ml-2 h-4 w-4" />}
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
+  if (tool.requiresAuth && !user) {
+    return (
+      <Dialog>
+        <DialogTrigger asChild>
+          <div className="block cursor-pointer">{cardContent}</div>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-2xl">Account Required</DialogTitle>
+            <DialogDescription>
+              Please log in or create an account to use the {tool.title}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <p>This tool is only available to registered users. Creating an account is free and gives you access to all of our tools and resources.</p>
+          </div>
+          <div className="flex justify-end space-x-4">
+            <Link to="/login">
+              <Button variant="outline">Login</Button>
+            </Link>
+            <Link to="/signup">
+              <Button>Sign Up</Button>
+            </Link>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return (
+    <Link to={tool.link} className="block">
+      {cardContent}
+    </Link>
+  );
+};
 
 const Tools = () => {
   const interactiveTools = [
@@ -16,7 +104,8 @@ const Tools = () => {
       icon: ShieldQuestion,
       featured: true,
       status: "Available",
-      link: "/wizards/dispute-resolution"
+      link: "/wizards/dispute-resolution",
+      requiresAuth: true,
     },
     {
       title: "Buyer Protection Checklist",
@@ -45,8 +134,8 @@ const Tools = () => {
       time: "2 minutes",
       icon: AlertTriangle,
       featured: false,
-      status: "Coming Soon",
-      link: "#"
+      status: "Available",
+      link: "/tools/red-flag-detector"
     },
     {
       title: "Contract Builder",
@@ -105,45 +194,7 @@ const Tools = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
             {interactiveTools.filter(tool => tool.featured).map((tool, index) => (
-              <Link to={tool.link} key={index} className="block">
-                <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 group cursor-pointer h-full">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-equine-accent p-3 rounded-lg group-hover:scale-110 transition-transform duration-300">
-                          <tool.icon className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex space-x-2">
-                          <Badge className="bg-green-100 text-green-800">
-                            {tool.difficulty}
-                          </Badge>
-                          <Badge variant="outline" className="border-equine-accent text-equine-accent">
-                            {tool.status}
-                          </Badge>
-                        </div>
-                      </div>
-                      <span className="text-equine-forest text-sm">
-                        {tool.time}
-                      </span>
-                    </div>
-                    <CardTitle className="text-xl font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
-                      {tool.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-equine-forest mb-6">
-                      {tool.description}
-                    </p>
-                    <Button 
-                      className="w-full bg-equine-accent text-white hover:bg-equine-forest"
-                      disabled={tool.status === "Coming Soon"}
-                    >
-                      {tool.status === "Coming Soon" ? "Coming Soon" : "Start Tool"}
-                      {tool.status !== "Coming Soon" && <ArrowRight className="ml-2 h-4 w-4" />}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Link>
+              <ToolCard tool={tool} key={index} />
             ))}
           </div>
         </div>
@@ -192,52 +243,7 @@ const Tools = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {interactiveTools.map((tool, index) => (
-              <Link to={tool.link} key={index} className="block">
-                <Card key={index} className="shadow-md hover:shadow-lg transition-all duration-300 border-0 group cursor-pointer h-full">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge 
-                        className={
-                          tool.status === "Available" 
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
-                        }
-                      >
-                        {tool.status}
-                      </Badge>
-                      <span className="text-equine-forest text-sm">
-                        {tool.time}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3 mb-3">
-                      <div className="bg-equine-accent p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
-                        <tool.icon className="h-5 w-5 text-white" />
-                      </div>
-                      <CardTitle className="text-lg font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
-                        {tool.title}
-                      </CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-equine-forest text-sm mb-4">
-                      {tool.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <Badge className="bg-blue-100 text-blue-800">
-                        {tool.difficulty}
-                      </Badge>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white"
-                        disabled={tool.status === "Coming Soon"}
-                      >
-                        {tool.status === "Coming Soon" ? "Soon" : "Use Tool"}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+              <ToolCard tool={tool} key={index} />
             ))}
           </div>
         </div>
@@ -250,15 +256,17 @@ const Tools = () => {
             Have a Specific Question?
           </h2>
           <p className="text-xl text-equine-sage mb-8">
-            Browse our learning guides for detailed explanations, or check out real case studies to see how these tools work in practice.
+            Browse our learning guides for detailed explanations, or check out our news section to see how these tools work in practice.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest-light font-semibold px-8 py-4 text-lg">
               Browse Learning Guides
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-equine-navy font-semibold px-8 py-4 text-lg">
-              View Case Studies
-            </Button>
+            <Link to="/news">
+              <Button size="lg" className="bg-white text-equine-navy hover:bg-gray-200 font-semibold px-8 py-4 text-lg">
+                View News
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -4,8 +4,26 @@ import { ArrowLeft, FileText, MessageCircle, Scale, AlertTriangle, ClipboardChec
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabaseClient';
+import { useEffect } from 'react';
+
+const contentId = "dispute-resolution";
 
 const Disputes = () => {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const markAsRead = async () => {
+      if (user) {
+        await supabase
+          .from('user_progress')
+          .upsert({ user_id: user.id, content_id: contentId }, { onConflict: 'user_id, content_id' });
+      }
+    };
+    markAsRead();
+  }, [user]);
+
   const steps = [
     {
       title: "Document Everything",

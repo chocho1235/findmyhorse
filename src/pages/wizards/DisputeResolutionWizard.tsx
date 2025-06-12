@@ -9,6 +9,8 @@ import { ArrowLeft, RefreshCw, Edit } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabaseClient';
 
 const steps = [
   {
@@ -17,8 +19,14 @@ const steps = [
     key: "sellerType",
   },
   {
+    question: "Was the horse bought unseen? (e.g., over the phone or online without a prior viewing)",
+    options: ["Yes, it was a distance sale", "No, I viewed the horse in person before purchase"],
+    key: "distanceSale",
+    condition: (answers: Record<string, string>) => answers.sellerType === "A business or dealer",
+  },
+  {
     question: "How long ago did you purchase the horse?",
-    options: ["Less than 30 days ago", "30 days to 6 months ago", "More than 6 months ago"],
+    options: ["Less than 14 days ago", "14 to 30 days ago", "30 days to 6 months ago", "More than 6 months ago"],
     key: "purchaseDate",
   },
   {
@@ -38,18 +46,43 @@ const steps = [
   },
 ];
 
+const toolId = "dispute-resolution-wizard";
+
 const DisputeResolutionWizard = () => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isCompleted, setIsCompleted] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [wizardSteps, setWizardSteps] = useState(steps.filter(step => !step.condition));
 
   useEffect(() => {
-    setProgress(((currentStep + 1) / steps.length) * 100);
-  }, [currentStep]);
+    const activeSteps = steps.filter(step => {
+        if (step.condition) {
+            return step.condition(answers);
+        }
+        return true;
+    });
+    setWizardSteps(activeSteps);
+  }, [answers]);
+
+  useEffect(() => {
+    setProgress(((currentStep + 1) / wizardSteps.length) * 100);
+  }, [currentStep, wizardSteps]);
+
+  useEffect(() => {
+    const trackToolUsage = async () => {
+      if (user) {
+        await supabase
+          .from('user_tool_usage')
+          .insert({ user_id: user.id, tool_id: toolId });
+      }
+    };
+    trackToolUsage();
+  }, [user]);
 
   const handleNext = () => {
-    if (currentStep < steps.length - 1) {
+    if (currentStep < wizardSteps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
       setIsCompleted(true);
@@ -78,7 +111,7 @@ const DisputeResolutionWizard = () => {
   };
 
   const getResults = () => {
-    const { sellerType, purchaseDate, issueType, contract, sellerContact } = answers;
+    const { sellerType, purchaseDate, issueType, contract, sellerContact, distanceSale } = answers;
 
     let legalPosition = {
         strength: 'Moderate',
@@ -88,21 +121,33 @@ const DisputeResolutionWizard = () => {
     const keyConsiderations = new Set<string>();
 
     if (sellerType === 'A business or dealer') {
-      keyConsiderations.add('As you purchased from a business, your rights are protected under the Consumer Rights Act 2015, which is significantly stronger than buying privately.');
-      if (purchaseDate === 'Less than 30 days ago') {
+      keyConsiderations.add('As you purchased from a business, your rights are protected under consumer law, which is significantly stronger than buying privately.');
+
+      if (distanceSale === 'Yes, it was a distance sale' && (purchaseDate === 'Less than 14 days ago')) {
+          legalPosition = {
+              strength: 'Very Strong',
+              summary: 'Under the Consumer Contracts Regulations 2013, you have a 14-day "cooling-off" period to return the horse for any reason for a full refund.'
+          };
+          nextSteps.add('Immediately notify the seller in writing that you are cancelling the contract under your cooling-off period rights. You do not need to give a reason.');
+          keyConsiderations.add('The cooling-off period is your most powerful right. However, you may have to pay the cost of returning the horse unless the seller agreed otherwise.');
+          keyConsiderations.add('This right applies even if the horse is perfectly as described.');
+      
+      } else if (purchaseDate === 'Less than 14 days ago' || purchaseDate === '14 to 30 days ago') {
         legalPosition = {
           strength: 'Very Strong',
-          summary: 'You have a "short-term right to reject" the horse and are entitled to a full refund.'
+          summary: 'Under the Consumer Rights Act 2015, you have a "short-term right to reject" the horse if it is not of satisfactory quality, fit for purpose, or as described. You are entitled to a full refund.'
         };
         nextSteps.add('Formally reject the horse in writing (email or recorded letter). State you are exercising your short-term right to reject under the Consumer Rights Act 2015.');
-        keyConsiderations.add('The seller is responsible for the cost of returning the horse. You do not have to prove the fault existed at purchase, only that it is present.');
+        keyConsiderations.add('The seller is responsible for the cost of returning the horse. You do not have to prove the fault existed at purchase, only that it is present now.');
+        keyConsiderations.add('Important: The Consumer Rights Act applies because there is an issue with the horse. It does not give you the right to return the horse if you simply change your mind, your circumstances change, or you find one you like better.');
       } else if (purchaseDate === '30 days to 6 months ago') {
         legalPosition = {
           strength: 'Strong',
-          summary: 'You have the right to a repair or replacement. If that fails or is not possible, you have a final right to reject.'
+          summary: 'Under the Consumer Rights Act 2015, the horse is presumed to have been faulty at the time of sale. You are entitled to a repair or replacement. A refund is only available if this is not possible or fails.'
         };
-        nextSteps.add('Contact the seller in writing to request they either repair the horse (e.g., pay for vet treatment) or offer a suitable replacement.');
-        keyConsiderations.add('The seller has one chance to repair or replace. If they fail, you can then demand a refund (which may be reduced to account for any use you have had).');
+        nextSteps.add('Contact the seller in writing to request they either arrange a "repair" (e.g., pay for specific vet treatment) or offer a suitable replacement horse.');
+        keyConsiderations.add('Crucially, the Consumer Rights Act does not give an automatic right to a refund after 30 days. The seller must be given one opportunity to repair or replace the horse first.');
+        keyConsiderations.add('If repair/replacement is impossible, fails, or is not done in a reasonable time, you then gain a "final right to reject" and can demand a refund (which may be reduced to account for any use you have had).');
       } else { // More than 6 months
         legalPosition = {
           strength: 'Moderate',
@@ -205,7 +250,7 @@ const DisputeResolutionWizard = () => {
       );
     }
 
-    const currentQuestion = steps[currentStep];
+    const currentQuestion = wizardSteps[currentStep];
 
     return (
       <motion.div
@@ -219,7 +264,7 @@ const DisputeResolutionWizard = () => {
           <CardTitle>Dispute Resolution Wizard</CardTitle>
           <div className="mt-2">
             <Progress value={progress} className="w-full" />
-            <p className="text-sm text-muted-foreground mt-2 text-center">Step {currentStep + 1} of {steps.length}</p>
+            <p className="text-sm text-muted-foreground mt-2 text-center">Step {currentStep + 1} of {wizardSteps.length}</p>
           </div>
         </CardHeader>
         <CardContent>
@@ -253,7 +298,7 @@ const DisputeResolutionWizard = () => {
             </Button>
             
             <Button onClick={handleNext} disabled={!answers[currentQuestion?.key]}>
-              {currentStep < steps.length - 1 ? 'Next' : 'Get My Results'}
+              {currentStep < wizardSteps.length - 1 ? 'Next' : 'Get My Results'}
             </Button>
           </div>
         </CardContent>

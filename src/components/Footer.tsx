@@ -69,7 +69,7 @@ const Footer = () => {
               <li><Link to="/tools" className="text-equine-sage hover:text-equine-cream transition-colors">Refund Checklist</Link></li>
               <li><Link to="/resources" className="text-equine-sage hover:text-equine-cream transition-colors">Template Downloads</Link></li>
               <li><Link to="/resources" className="text-equine-sage hover:text-equine-cream transition-colors">Buyer Guides</Link></li>
-              <li><Link to="/cases" className="text-equine-sage hover:text-equine-cream transition-colors">Real Case Studies</Link></li>
+              <li><Link to="/news" className="text-equine-sage hover:text-equine-cream transition-colors">Equestrian News</Link></li>
             </ul>
           </div>
 
@@ -86,6 +86,16 @@ const Footer = () => {
               </div>
             </div>
           </div>
+
+          {/* Company */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-white">Company</h4>
+            <ul className="space-y-2">
+              <li><Link to="/about" className="text-gray-400 hover:text-white transition-colors">About Us</Link></li>
+              <li><Link to="/news" className="text-gray-400 hover:text-white transition-colors">News</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
+            </ul>
+          </div>
         </div>
 
         <div className="border-t border-equine-navy-light mt-8 pt-8">
@@ -99,6 +109,12 @@ const Footer = () => {
               <Link to="/about" className="text-equine-sage hover:text-equine-cream transition-colors">About</Link>
             </div>
           </div>
+        </div>
+        <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-500">
+          <p>&copy; {new Date().getFullYear()} Equine Legal Compass. All rights reserved.</p>
+          <p className="mt-2 text-sm">
+            Powered by <a href="https://www.equinology.co.uk/" target="_blank" rel="noopener noreferrer" className="underline hover:text-white transition-colors">Equinology</a>
+          </p>
         </div>
       </div>
     </footer>

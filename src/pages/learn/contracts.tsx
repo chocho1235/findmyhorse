@@ -4,8 +4,26 @@ import { ArrowLeft, Download, CheckCircle, AlertTriangle, FileText, Shield } fro
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabaseClient';
+import { useEffect } from 'react';
+
+const contentId = "contract-essentials";
 
 const Contracts = () => {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const markAsRead = async () => {
+      if (user) {
+        await supabase
+          .from('user_progress')
+          .upsert({ user_id: user.id, content_id: contentId }, { onConflict: 'user_id, content_id' });
+      }
+    };
+    markAsRead();
+  }, [user]);
+
   const contractElements = [
     {
       title: "Horse Identification",

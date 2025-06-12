@@ -38,10 +38,10 @@ const MermaidDiagram = ({ chart }: MermaidDiagramProps) => {
   }, [chart]);
 
   return (
-    <div className="flex justify-center my-8">
+    <div className="flex justify-center">
       <div 
         ref={diagramRef}
-        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl overflow-x-auto"
+        className="w-full max-w-7xl overflow-x-auto"
       />
     </div>
   );

@@ -1,22 +1,128 @@
-
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { FileText, Menu, X, BookOpen, Users } from 'lucide-react';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { FileText, Menu, X, User, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { supabase } from '@/lib/supabaseClient';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, profile, logout, loading } = useAuth();
 
-  const navItems = [
-    { label: 'Home', path: '/' },
+  const navLinks = [
     { label: 'Learn', path: '/learn' },
     { label: 'Tools', path: '/tools' },
-    { label: 'Resources', path: '/resources' },
-    { label: 'Case Studies', path: '/cases' }
+    { label: 'News', path: '/news' },
+  ];
+
+  const authedNavLinks = [
+    { label: 'Learn', path: '/learn' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const getInitials = (name: string | undefined | null) => {
+    if (!name) return 'U';
+    return name.charAt(0).toUpperCase();
+  }
+
+  const renderAuthControls = () => {
+    if (loading) {
+      return null; // Or a loading spinner
+    }
+
+    if (user && profile) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="/avatars/01.png" alt={profile.username} />
+                <AvatarFallback>{getInitials(profile.username)}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{profile.username}</p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {user.email}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link to="/dashboard">Dashboard</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={logout}>
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    return (
+      <nav className="space-x-2">
+        <Link to="/login" className={buttonVariants({ variant: "ghost" })}>
+          Login
+        </Link>
+        <Link to="/signup" className={buttonVariants({ variant: "default" })}>
+          Sign Up
+        </Link>
+      </nav>
+    );
+  };
+  
+  const renderMobileAuthControls = () => {
+    if (loading) {
+      return null;
+    }
+
+    if (user && profile) {
+      return (
+        <>
+          <DropdownMenuItem asChild>
+            <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => { logout(); setIsMenuOpen(false); }} className="flex items-center space-x-2 cursor-pointer">
+             <LogOut className="h-4 w-4" />
+             <span>Logout</span>
+          </DropdownMenuItem>
+        </>
+      );
+    }
+
+    return (
+       <div className="pt-4 border-t border-equine-sage flex items-center gap-4">
+        <Link to="/login" className="w-full">
+          <Button variant="outline" className="w-full border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white font-semibold">
+            Login
+          </Button>
+        </Link>
+        <Link to="/signup" className="w-full">
+          <Button className="w-full bg-equine-accent text-white hover:bg-equine-forest font-semibold">
+            Sign Up
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 border-b border-equine-sage">
@@ -35,7 +141,7 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
+            {navLinks.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
@@ -55,10 +161,7 @@ const Navigation = () => {
 
           {/* CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            <Button className="bg-equine-accent text-white hover:bg-equine-forest font-semibold">
-              <BookOpen className="mr-2 h-4 w-4" />
-              Start Learning
-            </Button>
+            {renderAuthControls()}
           </div>
 
           {/* Mobile menu button */}
@@ -76,7 +179,7 @@ const Navigation = () => {
         {isMenuOpen && (
           <div className="md:hidden bg-equine-warm rounded-lg mx-4 mb-4 p-4 animate-scale-in">
             <div className="space-y-4">
-              {navItems.map((item) => (
+              {navLinks.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
@@ -90,12 +193,7 @@ const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
-              <div className="pt-4 border-t border-equine-sage">
-                <Button className="w-full bg-equine-accent text-white hover:bg-equine-forest font-semibold">
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  Start Learning
-                </Button>
-              </div>
+              {renderMobileAuthControls()}
             </div>
           </div>
         )}

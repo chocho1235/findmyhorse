@@ -1,99 +1,31 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Clock, DollarSign, AlertTriangle, CheckCircle, Users, MapPin } from 'lucide-react';
+import { ArrowRight, Clock, Landmark, AlertTriangle, Users, MapPin } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { newsArticles } from '@/lib/newsData';
+import { Link } from 'react-router-dom';
 
-const Cases = () => {
-  const caseStudies = [
-    {
-      title: "The Lame Horse Return",
-      summary: "Buyer discovers lameness 2 weeks after purchase - here's what happened next",
-      outcome: "Successful Return",
-      amount: "$15,000",
-      duration: "3 weeks",
-      location: "Texas",
-      category: "Health Issues",
-      featured: true,
-      outcomeType: "positive"
-    },
-    {
-      title: "Trial Period Gone Wrong",
-      summary: "Horse injured during trial period - who's responsible for vet bills?",
-      outcome: "Shared Responsibility",
-      amount: "$3,200",
-      duration: "6 weeks",
-      location: "California",
-      category: "Trial Periods",
-      featured: true,
-      outcomeType: "neutral"
-    },
-    {
-      title: "Misrepresented Training Level",
-      summary: "\"Broke to ride\" horse turns out to be dangerous - buyer's legal options",
-      outcome: "Partial Refund",
-      amount: "$8,500",
-      duration: "2 months",
-      location: "Kentucky",
-      category: "Misrepresentation",
-      featured: false,
-      outcomeType: "neutral"
-    },
-    {
-      title: "Age Fraud Discovery",
-      summary: "DNA test reveals horse is 8 years older than advertised",
-      outcome: "Full Refund + Costs",
-      amount: "$12,000",
-      duration: "4 weeks",
-      location: "Florida",
-      category: "Fraud",
-      featured: false,
-      outcomeType: "positive"
-    },
-    {
-      title: "Transport Injury Dispute",
-      summary: "Horse injured during shipping - complex liability between multiple parties",
-      outcome: "Insurance Settlement",
-      amount: "$22,000",
-      duration: "8 months",
-      location: "Colorado",
-      category: "Transport Issues",
-      featured: false,
-      outcomeType: "positive"
-    },
-    {
-      title: "Breeding Rights Confusion",
-      summary: "Mare sold with unclear breeding restrictions leads to legal conflict",
-      outcome: "Court Decision",
-      amount: "$35,000",
-      duration: "14 months",
-      location: "Virginia",
-      category: "Breeding Rights",
-      featured: false,
-      outcomeType: "negative"
-    }
-  ];
+const insights = [
+  {
+    title: "75% of disputes involve private sales",
+    description: "Most conflicts arise from private transactions with less legal protection.",
+    icon: Users
+  },
+  {
+    title: "Average resolution time: 6 weeks",
+    description: "Most cases resolve faster with proper documentation and early legal advice.",
+    icon: Clock
+  },
+  {
+    title: "Documentation is crucial",
+    description: "Cases with good records have a 3x higher success rate in achieving a favourable outcome.",
+    icon: AlertTriangle
+  }
+];
 
-  const insights = [
-    {
-      title: "90% of cases involve contract issues",
-      description: "Most disputes could have been prevented with clearer contracts",
-      icon: CheckCircle
-    },
-    {
-      title: "Average resolution time: 6 weeks",
-      description: "Most cases resolve faster with proper documentation",
-      icon: Clock
-    },
-    {
-      title: "Documentation is crucial",
-      description: "Cases with good records have 3x higher success rates",
-      icon: AlertTriangle
-    }
-  ];
-
+const NewsPage = () => {
   const getOutcomeColor = (type: string) => {
     switch (type) {
       case 'positive': return 'bg-green-100 text-green-800';
@@ -109,7 +41,8 @@ const Cases = () => {
       'Misrepresentation': 'bg-orange-100 text-orange-800',
       'Fraud': 'bg-red-100 text-red-800',
       'Transport Issues': 'bg-indigo-100 text-indigo-800',
-      'Breeding Rights': 'bg-pink-100 text-pink-800'
+      'Breeding Rights': 'bg-pink-100 text-pink-800',
+      'Contract Law': 'bg-teal-100 text-teal-800'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';
   };
@@ -117,16 +50,16 @@ const Cases = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="hero-gradient text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl lg:text-5xl font-heading font-bold mb-6">
-            Real Case Studies from
-            <span className="block text-equine-accent">Horse Transactions</span>
+            Equestrian Legal News
+            <span className="block text-equine-accent">Analysis & Outcomes</span>
           </h1>
           <p className="text-xl text-equine-sage mb-8 leading-relaxed">
-            Learn from real disputes, successful resolutions, and legal outcomes. See how our guidance applies in practice.
+            Learn from real disputes, successful resolutions, and legal outcomes. See how legal principles apply in practice.
           </p>
         </div>
       </section>
@@ -135,8 +68,8 @@ const Cases = () => {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">What We've Learned</h2>
-            <p className="text-lg text-equine-forest">Insights from analyzing hundreds of horse transaction disputes.</p>
+            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">Key Legal Insights</h2>
+            <p className="text-lg text-equine-forest">Insights from analyzing hundreds of equestrian disputes.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -161,52 +94,54 @@ const Cases = () => {
         </div>
       </section>
 
-      {/* Featured Cases */}
+      {/* Featured News */}
       <section className="py-16 bg-equine-warm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">Featured Case Studies</h2>
-            <p className="text-lg text-equine-forest">Detailed analysis of the most educational horse transaction disputes.</p>
+            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">Featured News & Analysis</h2>
+            <p className="text-lg text-equine-forest">Detailed analysis of the most educational equestrian disputes.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-            {caseStudies.filter(study => study.featured).map((study, index) => (
+            {newsArticles.filter(article => article.featured).map((article, index) => (
               <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 group cursor-pointer bg-white">
                 <CardHeader>
                   <div className="flex items-center justify-between mb-3">
-                    <Badge className={getCategoryColor(study.category)}>
-                      {study.category}
+                    <Badge className={getCategoryColor(article.category)}>
+                      {article.category}
                     </Badge>
-                    <Badge className={getOutcomeColor(study.outcomeType)}>
-                      {study.outcome}
+                    <Badge className={getOutcomeColor(article.outcomeType)}>
+                      {article.outcome}
                     </Badge>
                   </div>
                   <CardTitle className="text-xl font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
-                    {study.title}
+                    {article.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-equine-forest mb-6">
-                    {study.summary}
+                    {article.summary}
                   </p>
-                  <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+                  <div className="grid grid-cols-3 gap-4 mb-6 text-sm">
                     <div className="flex items-center space-x-2">
-                      <DollarSign className="h-4 w-4 text-equine-accent" />
-                      <span className="text-equine-forest">{study.amount}</span>
+                      <Landmark className="h-4 w-4 text-equine-accent" />
+                      <span className="text-equine-forest">{article.amount}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Clock className="h-4 w-4 text-equine-accent" />
-                      <span className="text-equine-forest">{study.duration}</span>
+                      <span className="text-equine-forest">{article.duration}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <MapPin className="h-4 w-4 text-equine-accent" />
-                      <span className="text-equine-forest">{study.location}</span>
+                      <span className="text-equine-forest">{article.location}</span>
                     </div>
                   </div>
-                  <Button className="w-full bg-equine-accent text-white hover:bg-equine-forest">
-                    Read Full Case Study
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                  <Link to={`/news/${article.id}`}>
+                    <Button className="w-full bg-equine-accent text-white hover:bg-equine-forest">
+                      Read Full Analysis
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -214,47 +149,49 @@ const Cases = () => {
         </div>
       </section>
 
-      {/* All Cases */}
+      {/* All News Articles */}
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">All Case Studies</h2>
-            <p className="text-lg text-equine-forest">Browse our complete collection of real horse transaction disputes and their outcomes.</p>
+            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">All News Articles</h2>
+            <p className="text-lg text-equine-forest">Browse our complete collection of real dispute analyses and their outcomes.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {caseStudies.map((study, index) => (
+            {newsArticles.map((article, index) => (
               <Card key={index} className="shadow-md hover:shadow-lg transition-all duration-300 border-0 group cursor-pointer">
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <Badge className={getCategoryColor(study.category)}>
-                      {study.category}
+                    <Badge className={getCategoryColor(article.category)}>
+                      {article.category}
                     </Badge>
                     <div className="flex items-center space-x-1 text-equine-forest text-sm">
                       <MapPin className="h-3 w-3" />
-                      <span>{study.location}</span>
+                      <span>{article.location}</span>
                     </div>
                   </div>
                   <CardTitle className="text-lg font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
-                    {study.title}
+                    {article.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-equine-forest text-sm mb-4">
-                    {study.summary}
+                    {article.summary}
                   </p>
                   <div className="flex items-center justify-between mb-4">
-                    <Badge className={getOutcomeColor(study.outcomeType)}>
-                      {study.outcome}
+                    <Badge className={getOutcomeColor(article.outcomeType)}>
+                      {article.outcome}
                     </Badge>
                     <div className="flex items-center space-x-2 text-sm text-equine-forest">
-                      <DollarSign className="h-3 w-3" />
-                      <span>{study.amount}</span>
+                      <Landmark className="h-3 w-3" />
+                      <span>{article.amount}</span>
                     </div>
                   </div>
-                  <Button size="sm" variant="outline" className="w-full border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white">
-                    Read Case
-                  </Button>
+                  <Link to={`/news/${article.id}`}>
+                    <Button size="sm" variant="outline" className="w-full border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white">
+                      Read Analysis
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -269,7 +206,7 @@ const Cases = () => {
             Protect Yourself from Similar Issues
           </h2>
           <p className="text-xl text-equine-sage mb-8">
-            Use our tools and guides to avoid the problems you've seen in these case studies.
+            Use our tools and guides to avoid the problems you've seen in the news.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest-light font-semibold px-8 py-4 text-lg">
@@ -287,4 +224,4 @@ const Cases = () => {
   );
 };
 
-export default Cases;
+export default NewsPage;
