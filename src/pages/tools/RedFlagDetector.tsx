@@ -2,13 +2,19 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { AlertTriangle, Loader2, CheckCircle, Shield } from 'lucide-react';
+import { AlertTriangle, Loader2, CheckCircle, Shield, Sparkles } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import { redFlags, RedFlag } from '@/lib/redFlags';
+import { redFlags, greenFlags, RedFlag, GreenFlag } from '@/lib/redFlags';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-interface FoundFlag extends RedFlag {
+interface FoundRedFlag extends RedFlag {
+  match: string;
+  context: string;
+}
+
+interface FoundGreenFlag extends GreenFlag {
   match: string;
   context: string;
 }
@@ -16,15 +22,18 @@ interface FoundFlag extends RedFlag {
 interface AnalysisResult {
   score: number;
   level: 'Low' | 'Moderate' | 'High' | 'Very High';
-  flags: FoundFlag[];
+  redFlags: FoundRedFlag[];
+  greenFlags: FoundGreenFlag[];
 }
 
 const RedFlagDetector = () => {
   const [inputText, setInputText] = useState('');
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const MIN_CHARS = 50;
 
-  const analyzeText = () => {
+  const analyseText = () => {
+    if (inputText.length < MIN_CHARS) return;
     setIsLoading(true);
     setResult(null);
 
@@ -32,28 +41,48 @@ const RedFlagDetector = () => {
 
     setTimeout(() => {
       let score = 0;
-      const flags: FoundFlag[] = [];
-      const usedFlags = new Set<string>();
+      const foundRedFlags: FoundRedFlag[] = [];
+      const foundGreenFlags: FoundGreenFlag[] = [];
+      const usedRedFlags = new Set<string>();
+      const usedGreenFlags = new Set<string>();
 
       sentences.forEach(sentence => {
         redFlags.forEach(flag => {
           const match = sentence.match(flag.pattern);
-          if (match && !usedFlags.has(flag.id)) {
-            flags.push({ ...flag, match: match[0], context: sentence.trim() });
-            score += flag.severity;
-            usedFlags.add(flag.id);
+          if (match && !usedRedFlags.has(flag.id)) {
+            let isNegated = false;
+            if (flag.checkNegations) {
+              const negationPattern = new RegExp(`(not|no|never|without)\\s+${match[0]}`, 'i');
+              if (sentence.match(negationPattern)) {
+                isNegated = true;
+              }
+            }
+            
+            if (!isNegated) {
+              foundRedFlags.push({ ...flag, match: match[0], context: sentence.trim() });
+              score += flag.severity;
+              usedRedFlags.add(flag.id);
+            }
+          }
+        });
+        
+        greenFlags.forEach(flag => {
+          const match = sentence.match(flag.pattern);
+          if (match && !usedGreenFlags.has(flag.id)) {
+            foundGreenFlags.push({ ...flag, match: match[0], context: sentence.trim() });
+            usedGreenFlags.add(flag.id);
           }
         });
       });
       
-      flags.sort((a, b) => b.severity - a.severity);
+      foundRedFlags.sort((a, b) => b.severity - a.severity);
 
       let level: AnalysisResult['level'] = 'Low';
       if (score >= 8) level = 'Very High';
       else if (score >= 5) level = 'High';
       else if (score >= 2) level = 'Moderate';
 
-      setResult({ score, level, flags });
+      setResult({ score, level, redFlags: foundRedFlags, greenFlags: foundGreenFlags });
       setIsLoading(false);
     }, 500);
   };
@@ -70,9 +99,14 @@ const RedFlagDetector = () => {
     let text = inputText;
     text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     
-    result.flags.forEach(flag => {
+    result.redFlags.forEach(flag => {
         const re = new RegExp(`(${flag.match})`, 'gi');
         text = text.replace(re, `<mark class="bg-yellow-200 rounded px-1">$1</mark>`);
+    });
+
+    result.greenFlags.forEach(flag => {
+        const re = new RegExp(`(${flag.match})`, 'gi');
+        text = text.replace(re, `<mark class="bg-green-200 rounded px-1">$1</mark>`);
     });
 
     return { __html: text.replace(/\n/g, '<br />') };
@@ -94,15 +128,25 @@ const RedFlagDetector = () => {
 
           <Card>
             <CardContent className="p-6">
-              <Textarea
-                placeholder="An honest horse, sold as seen. Needs an experienced rider as can be quirky..."
-                className="w-full h-64 text-base"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-              />
-              <Button onClick={analyzeText} className="mt-4 w-full" disabled={isLoading || !inputText}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Generate Report'}
-              </Button>
+              <div className="space-y-2">
+                <Textarea
+                  placeholder="An honest horse, sold as seen. Needs an experienced rider as can be quirky..."
+                  className="w-full h-64 text-base"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                />
+                <div className="flex justify-between items-center text-sm text-gray-500">
+                  <span>{inputText.length} characters</span>
+                  <span>{inputText.length < MIN_CHARS ? `Minimum ${MIN_CHARS} characters required` : 'Ready to analyze'}</span>
+                </div>
+                <Button 
+                  onClick={analyseText} 
+                  className="mt-4 w-full" 
+                  disabled={isLoading || inputText.length < MIN_CHARS}
+                >
+                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Analyse Text'}
+                </Button>
+              </div>
             </CardContent>
           </Card>
           
@@ -121,7 +165,7 @@ const RedFlagDetector = () => {
                     </div>
 
                     {/* --- Annotated Text --- */}
-                    {result.flags.length > 0 && (
+                    {(result.redFlags.length > 0 || result.greenFlags.length > 0) && (
                         <div>
                             <h3 className="text-xl font-bold font-heading text-gray-800 mb-3">Annotated Text</h3>
                             <div className="prose max-w-none p-4 border rounded-md bg-white">
@@ -130,11 +174,11 @@ const RedFlagDetector = () => {
                         </div>
                     )}
                     
-                    {/* --- Detailed Findings --- */}
+                    {/* --- Detailed Findings (Red Flags) --- */}
                     <div>
-                        <h3 className="text-xl font-bold font-heading text-gray-800 mb-3">Detailed Findings</h3>
+                        <h3 className="text-xl font-bold font-heading text-gray-800 mb-3">Risk Factors</h3>
                         <ul className="space-y-4">
-                            {result.flags.length > 0 ? result.flags.map((flag) => (
+                            {result.redFlags.length > 0 ? result.redFlags.map((flag) => (
                                 <li key={flag.id} className="p-4 border-l-4 border-yellow-400 bg-yellow-50 rounded-r-lg">
                                     <h4 className="font-bold text-lg text-yellow-900 mb-2 flex items-center">
                                        <AlertTriangle className="h-5 w-5 mr-2 text-yellow-600"/> {flag.label}
@@ -152,6 +196,23 @@ const RedFlagDetector = () => {
                             )}
                         </ul>
                     </div>
+
+                    {/* --- Positive Signs (Green Flags) --- */}
+                    {result.greenFlags.length > 0 && (
+                        <div>
+                            <h3 className="text-xl font-bold font-heading text-gray-800 mt-6 mb-3">Positive Signs</h3>
+                            <ul className="space-y-4">
+                                {result.greenFlags.map((flag) => (
+                                    <li key={flag.id} className="p-4 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                                        <h4 className="font-bold text-lg text-green-900 mb-2 flex items-center">
+                                            <Sparkles className="h-5 w-5 mr-2 text-green-600"/> {flag.label}
+                                        </h4>
+                                        <p className="text-green-800">{flag.explanation}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
           )}

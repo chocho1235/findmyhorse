@@ -1,23 +1,22 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
 
-/* EquineClause Design System */
+/* FindMyHorse Design System */
 
 @layer base {
   :root {
     /* Brand Colors */
     --equine-navy: 220 30% 15%;
     --equine-navy-light: 220 25% 25%;
-    --equine-forest: 140 30% 25%;
-    --equine-forest-light: 140 25% 40%;
-    --equine-sage: 140 15% 60%;
-    --equine-cream: 45 35% 96%;
-    --equine-warm: 25 40% 92%;
-    --equine-accent: 160 40% 35%;
+    --equine-forest: 220 70% 35%;
+    --equine-forest-light: 220 65% 45%;
+    --equine-sage: 220 40% 70%;
+    --equine-cream: 220 10% 98%;
+    --equine-warm: 220 15% 96%;
+    --equine-accent: 220 80% 40%;
     
     --background: var(--equine-cream);
     --foreground: var(--equine-navy);
@@ -43,8 +42,8 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 140 15% 85%;
-    --input: 140 15% 90%;
+    --border: 220 30% 85%;
+    --input: 220 30% 90%;
     --ring: var(--equine-accent);
 
     --radius: 0.5rem;
@@ -75,6 +74,51 @@
 @layer components {
   .hero-gradient {
     background: linear-gradient(135deg, hsl(var(--equine-navy)) 0%, hsl(var(--equine-forest)) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    animation: pulse 12s ease-in-out infinite;
+  }
+
+  .hero-gradient::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.02) 50%, transparent 100%);
+    animation: shine 15s linear infinite;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    animation: fadeInUp 1.2s ease-out;
+  }
+
+  .hero-subtitle {
+    animation: fadeInUp 1.2s ease-out 0.3s backwards;
+  }
+
+  .hero-description {
+    animation: fadeInUp 1.2s ease-out 0.6s backwards;
+  }
+
+  .hero-buttons {
+    animation: fadeInUp 1.2s ease-out 0.9s backwards;
   }
   
   .accent-gradient {
@@ -84,5 +128,36 @@
   .section-divider {
     background: linear-gradient(90deg, transparent 0%, hsl(var(--equine-accent)) 50%, transparent 100%);
     height: 2px;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

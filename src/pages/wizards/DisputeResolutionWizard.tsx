@@ -26,8 +26,19 @@ const steps = [
   },
   {
     question: "How long ago did you purchase the horse?",
-    options: ["Less than 14 days ago", "14 to 30 days ago", "30 days to 6 months ago", "More than 6 months ago"],
+    options: [
+      "Less than 14 days ago",
+      "14 to 30 days ago",
+      "30 days to 6 months ago",
+      "More than 6 months ago"
+    ],
     key: "purchaseDate",
+  },
+  {
+    question: "If it was a distance sale, were you informed of your right to reject within 14 days (e.g., in T&Cs, an email, or any document you could keep)?",
+    options: ["Yes, it was included in T&Cs or a document/email", "No, I was not informed in any durable way"],
+    key: "distanceInfo",
+    condition: (answers: Record<string, string>) => answers.sellerType === "A business or dealer" && answers.distanceSale === "Yes, it was a distance sale",
   },
   {
     question: "What is the primary issue with the horse?",
@@ -111,7 +122,7 @@ const DisputeResolutionWizard = () => {
   };
 
   const getResults = () => {
-    const { sellerType, purchaseDate, issueType, contract, sellerContact, distanceSale } = answers;
+    const { sellerType, purchaseDate, issueType, contract, sellerContact, distanceSale, distanceInfo } = answers;
 
     let legalPosition = {
         strength: 'Moderate',
@@ -123,38 +134,66 @@ const DisputeResolutionWizard = () => {
     if (sellerType === 'A business or dealer') {
       keyConsiderations.add('As you purchased from a business, your rights are protected under consumer law, which is significantly stronger than buying privately.');
 
-      if (distanceSale === 'Yes, it was a distance sale' && (purchaseDate === 'Less than 14 days ago')) {
+      if (distanceSale === 'Yes, it was a distance sale') {
+        if (purchaseDate === 'Less than 14 days ago') {
           legalPosition = {
-              strength: 'Very Strong',
-              summary: 'Under the Consumer Contracts Regulations 2013, you have a 14-day "cooling-off" period to return the horse for any reason for a full refund.'
+            strength: 'Very Strong',
+            summary: 'Under the Consumer Contracts Regulations 2013, you have a 14-day "cooling-off" period to return the horse for any reason for a full refund.'
           };
           nextSteps.add('Immediately notify the seller in writing that you are cancelling the contract under your cooling-off period rights. You do not need to give a reason.');
           keyConsiderations.add('The cooling-off period is your most powerful right. However, you may have to pay the cost of returning the horse unless the seller agreed otherwise.');
           keyConsiderations.add('This right applies even if the horse is perfectly as described.');
-      
-      } else if (purchaseDate === 'Less than 14 days ago' || purchaseDate === '14 to 30 days ago') {
-        legalPosition = {
-          strength: 'Very Strong',
-          summary: 'Under the Consumer Rights Act 2015, you have a "short-term right to reject" the horse if it is not of satisfactory quality, fit for purpose, or as described. You are entitled to a full refund.'
-        };
-        nextSteps.add('Formally reject the horse in writing (email or recorded letter). State you are exercising your short-term right to reject under the Consumer Rights Act 2015.');
-        keyConsiderations.add('The seller is responsible for the cost of returning the horse. You do not have to prove the fault existed at purchase, only that it is present now.');
-        keyConsiderations.add('Important: The Consumer Rights Act applies because there is an issue with the horse. It does not give you the right to return the horse if you simply change your mind, your circumstances change, or you find one you like better.');
-      } else if (purchaseDate === '30 days to 6 months ago') {
-        legalPosition = {
-          strength: 'Strong',
-          summary: 'Under the Consumer Rights Act 2015, the horse is presumed to have been faulty at the time of sale. You are entitled to a repair or replacement. A refund is only available if this is not possible or fails.'
-        };
-        nextSteps.add('Contact the seller in writing to request they either arrange a "repair" (e.g., pay for specific vet treatment) or offer a suitable replacement horse.');
-        keyConsiderations.add('Crucially, the Consumer Rights Act does not give an automatic right to a refund after 30 days. The seller must be given one opportunity to repair or replace the horse first.');
-        keyConsiderations.add('If repair/replacement is impossible, fails, or is not done in a reasonable time, you then gain a "final right to reject" and can demand a refund (which may be reduced to account for any use you have had).');
-      } else { // More than 6 months
-        legalPosition = {
-          strength: 'Moderate',
-          summary: 'After 6 months, the burden of proof shifts to you to prove the problem existed at the time of purchase.'
-        };
-        nextSteps.add('Gather strong evidence that the fault was present at the time of sale. This will almost certainly require a detailed report from a qualified veterinarian.');
-        keyConsiderations.add('This can be difficult and expensive to prove. The strength of your vet\'s evidence is critical to your case.');
+        } else if (purchaseDate === '14 to 30 days ago' || purchaseDate === '30 days to 6 months ago') {
+          if (distanceInfo === 'No, I was not informed in any durable way') {
+            legalPosition = {
+              strength: 'Strong',
+              summary: 'If the seller did not inform you in a durable medium (such as T&Cs, email, or any document you could keep) of your right to reject within 14 days, the cooling-off period may be extended up to 12 months. You may still be able to reject the horse.'
+            };
+            nextSteps.add('Write to the seller stating that you were not informed of your right to reject in a durable medium and are exercising your extended cooling-off period under the Consumer Contracts Regulations 2013.');
+            keyConsiderations.add('The law requires the seller to inform you of your right to reject in a durable medium (such as T&Cs, an email, or a document you can keep). If they did not, your right to reject is extended.');
+          } else {
+            legalPosition = {
+              strength: 'Strong',
+              summary: 'Under the Consumer Rights Act 2015, you are entitled to a repair or replacement. A refund is only available if this is not possible or fails.'
+            };
+            nextSteps.add('Contact the seller in writing to request they either arrange a repair (e.g., pay for specific vet treatment) or offer a suitable replacement horse.');
+            keyConsiderations.add('The Consumer Rights Act does not give an automatic right to a refund after 30 days. The seller must be given one opportunity to repair or replace the horse first.');
+            keyConsiderations.add('If repair/replacement is impossible, fails, or is not done in a reasonable time, you then gain a "final right to reject" and can demand a refund (which may be reduced to account for any use you have had).');
+          }
+        } else { // More than 6 months
+          legalPosition = {
+            strength: 'Moderate',
+            summary: 'After 6 months, the burden of proof shifts to you to prove the problem existed at the time of purchase.'
+          };
+          nextSteps.add('Gather strong evidence that the fault was present at the time of sale. This will almost certainly require a detailed report from a qualified veterinarian.');
+          keyConsiderations.add('This can be difficult and expensive to prove. The strength of your vet\'s evidence is critical to your case.');
+        }
+      } else {
+        // Not a distance sale
+        if (purchaseDate === 'Less than 14 days ago' || purchaseDate === '14 to 30 days ago') {
+          legalPosition = {
+            strength: 'Very Strong',
+            summary: 'Under the Consumer Rights Act 2015, you have a "short-term right to reject" the horse if it is not of satisfactory quality, fit for purpose, or as described. You are entitled to a full refund.'
+          };
+          nextSteps.add('Formally reject the horse in writing (email or recorded letter). State you are exercising your short-term right to reject under the Consumer Rights Act 2015.');
+          keyConsiderations.add('The seller is responsible for the cost of returning the horse. You do not have to prove the fault existed at purchase, only that it is present now.');
+          keyConsiderations.add('Important: The Consumer Rights Act applies because there is an issue with the horse. It does not give you the right to return the horse if you simply change your mind, your circumstances change, or you find one you like better.');
+        } else if (purchaseDate === '30 days to 6 months ago') {
+          legalPosition = {
+            strength: 'Strong',
+            summary: 'Under the Consumer Rights Act 2015, the horse is presumed to have been faulty at the time of sale. You are entitled to a repair or replacement. A refund is only available if this is not possible or fails.'
+          };
+          nextSteps.add('Contact the seller in writing to request they either arrange a repair (e.g., pay for specific vet treatment) or offer a suitable replacement horse.');
+          keyConsiderations.add('The Consumer Rights Act does not give an automatic right to a refund after 30 days. The seller must be given one opportunity to repair or replace the horse first.');
+          keyConsiderations.add('If repair/replacement is impossible, fails, or is not done in a reasonable time, you then gain a "final right to reject" and can demand a refund (which may be reduced to account for any use you have had).');
+        } else { // More than 6 months
+          legalPosition = {
+            strength: 'Moderate',
+            summary: 'After 6 months, the burden of proof shifts to you to prove the problem existed at the time of purchase.'
+          };
+          nextSteps.add('Gather strong evidence that the fault was present at the time of sale. This will almost certainly require a detailed report from a qualified veterinarian.');
+          keyConsiderations.add('This can be difficult and expensive to prove. The strength of your vet\'s evidence is critical to your case.');
+        }
       }
     } else { // Private seller
       keyConsiderations.add('In a private sale, the principle of "caveat emptor" (buyer beware) applies. Your main legal recourse is the Misrepresentation Act 1967.');
@@ -213,7 +252,7 @@ const DisputeResolutionWizard = () => {
           transition={{ duration: 0.3 }}
         >
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Your Personalized Dispute Resolution Plan</CardTitle>
+            <CardTitle className="text-2xl text-center">Your Personalised Dispute Resolution Plan</CardTitle>
           </CardHeader>
           <CardContent>
             <Alert className={alertClass}>
@@ -262,8 +301,8 @@ const DisputeResolutionWizard = () => {
       >
         <CardHeader>
           <CardTitle>Dispute Resolution Wizard</CardTitle>
-          <div className="mt-2">
-            <Progress value={progress} className="w-full" />
+          <div className="space-y-4">
+            <Progress value={progress} className="w-full transition-all" />
             <p className="text-sm text-muted-foreground mt-2 text-center">Step {currentStep + 1} of {wizardSteps.length}</p>
           </div>
         </CardHeader>

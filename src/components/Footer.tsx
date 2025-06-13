@@ -40,7 +40,7 @@ const Footer = () => {
                 <FileText className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h2 className="text-lg font-heading font-bold">EquineClause</h2>
+                <h2 className="text-lg font-heading font-bold">FindMyHorse</h2>
                 <p className="text-sm text-equine-sage">Legal Clarity for Horse Sales</p>
               </div>
             </div>
@@ -101,7 +101,7 @@ const Footer = () => {
         <div className="border-t border-equine-navy-light mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-equine-sage text-sm">
-              © 2024 EquineClause. All resources provided for educational purposes.
+              © 2024 FindMyHorse. All resources provided for educational purposes.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0 text-sm">
                 <button onClick={() => setIsDisclaimerOpen(true)} className="text-equine-sage hover:text-equine-cream transition-colors">Legal Disclaimer</button>
@@ -111,7 +111,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-500">
-          <p>&copy; {new Date().getFullYear()} Equine Legal Compass. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} FindMyHorse. All rights reserved.</p>
           <p className="mt-2 text-sm">
             Powered by <a href="https://www.equinology.co.uk/" target="_blank" rel="noopener noreferrer" className="underline hover:text-white transition-colors">Equinology</a>
           </p>

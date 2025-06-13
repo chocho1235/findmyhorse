@@ -62,14 +62,14 @@ const Navigation = () => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem asChild className="cursor-pointer">
               <Link to="/dashboard">Dashboard</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               Profile
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout}>
+            <DropdownMenuItem onClick={logout} className="cursor-pointer">
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -130,12 +130,12 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="bg-equine-accent p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
-              <FileText className="h-6 w-6 text-white" />
+            <div className="group-hover:scale-110 transition-transform duration-300">
+              <img src="/Untitled design (36).png" alt="FindMyHorse Logo" className="h-16 w-auto" />
             </div>
             <div className="text-equine-navy">
-              <h1 className="text-xl font-heading font-bold">EquineClause</h1>
-              <p className="text-xs text-equine-forest">Legal Clarity for Horse Sales</p>
+              <h1 className="text-xl font-heading font-bold">FindMyHorse</h1>
+              <p className="text-xs text-equine-forest">Your Complete Horse Guide</p>
             </div>
           </Link>
 

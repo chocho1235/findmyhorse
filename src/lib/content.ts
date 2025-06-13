@@ -1,4 +1,4 @@
-import { BookOpen, CheckCircle, Users, Scale, AlertCircle, Clock } from 'lucide-react';
+import { BookOpen, CheckCircle, Users, Scale, AlertCircle, Clock, Heart, Stethoscope } from 'lucide-react';
 
 export const allLearningTopics = [
   {
@@ -66,5 +66,38 @@ export const allLearningTopics = [
     color: "bg-red-100 text-red-800",
     featured: false,
     path: "#",
+  },
+  {
+    id: "gastric-ulcers",
+    title: "Gastric Ulcers",
+    description: "Legal implications of gastric ulcers in horse sales and returns",
+    readTime: "15 min read",
+    difficulty: "Intermediate",
+    icon: Heart,
+    color: "bg-pink-100 text-pink-800",
+    featured: false,
+    path: "/learn/health/gastric-ulcers",
+  },
+  {
+    id: "kissing-spine",
+    title: "Kissing Spine",
+    description: "Understanding legal rights when kissing spine is discovered after purchase",
+    readTime: "18 min read",
+    difficulty: "Intermediate",
+    icon: Stethoscope,
+    color: "bg-teal-100 text-teal-800",
+    featured: false,
+    path: "/learn/health/kissing-spine",
+  },
+  {
+    id: "lameness-issues",
+    title: "Lameness Issues",
+    description: "Legal framework for handling lameness-related disputes",
+    readTime: "20 min read",
+    difficulty: "Intermediate",
+    icon: Stethoscope,
+    color: "bg-amber-100 text-amber-800",
+    featured: false,
+    path: "/learn/health/lameness",
   }
 ]; 

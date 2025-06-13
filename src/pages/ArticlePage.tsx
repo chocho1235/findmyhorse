@@ -4,7 +4,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Clock, Landmark, MapPin, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Clock, Landmark, MapPin, MessageSquare, User } from 'lucide-react';
 import NotFound from './NotFound';
 
 const ArticlePage = () => {
@@ -77,6 +77,10 @@ const ArticlePage = () => {
               </h1>
 
               <div className="mt-6 flex flex-wrap gap-x-6 gap-y-4 text-lg text-equine-forest">
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5 text-equine-accent" />
+                  <span className="font-semibold">{article.author}</span>
+                </div>
                 <div className="flex items-center gap-2">
                   <Landmark className="h-5 w-5 text-equine-accent" />
                   <span>{article.amount}</span>

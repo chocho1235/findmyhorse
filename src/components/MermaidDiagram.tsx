@@ -22,14 +22,12 @@ const MermaidDiagram = ({ chart }: MermaidDiagramProps) => {
 
     const renderDiagram = async () => {
       if (diagramRef.current) {
-        // Clear the previous diagram
-        diagramRef.current.innerHTML = '';
-        
         try {
           const { svg } = await mermaid.render('mermaid-diagram', chart);
           diagramRef.current.innerHTML = svg;
         } catch (error) {
           console.error('Failed to render Mermaid diagram:', error);
+          diagramRef.current.innerHTML = '<div class="text-red-500 text-center p-4">Failed to load diagram. Please try refreshing the page.</div>';
         }
       }
     };
@@ -42,6 +40,7 @@ const MermaidDiagram = ({ chart }: MermaidDiagramProps) => {
       <div 
         ref={diagramRef}
         className="w-full max-w-7xl overflow-x-auto"
+        style={{ backgroundColor: 'transparent' }}
       />
     </div>
   );

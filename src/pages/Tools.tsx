@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import MetaTags from '@/components/seo/MetaTags';
 
 const ToolCard = ({ tool }) => {
   const { user } = useAuth();
@@ -113,7 +114,7 @@ const Tools = () => {
       difficulty: "Easy",
       time: "5 minutes",
       icon: Shield,
-      featured: true,
+      featured: false,
       status: "Coming Soon",
       link: "#"
     },
@@ -133,7 +134,7 @@ const Tools = () => {
       difficulty: "Easy",
       time: "2 minutes",
       icon: AlertTriangle,
-      featured: false,
+      featured: true,
       status: "Available",
       link: "/tools/red-flag-detector"
     },
@@ -168,111 +169,119 @@ const Tools = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      
-      {/* Hero Section */}
-      <section className="hero-gradient text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-heading font-bold mb-6">
-            Interactive Tools for
-            <span className="block text-equine-accent">Safer Horse Transactions</span>
-          </h1>
-          <p className="text-xl text-equine-sage mb-8 leading-relaxed">
-            Use our free tools to build contracts, check your rights, and protect yourself in horse purchases and sales.
-          </p>
-        </div>
-      </section>
-
-      {/* Featured Tools */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12">
-            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">Most Popular Tools</h2>
-            <p className="text-lg text-equine-forest">Start with these essential tools used by thousands of horse buyers and sellers.</p>
+    <>
+      <MetaTags
+        title="Free Equine Legal Tools - FindMyHorse"
+        description="Interactive tools and resources to help you navigate UK equine law, including contract checkers, liability calculators, and more."
+      />
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        {/* Hero Section */}
+        <section className="hero-gradient text-white py-16">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-4xl lg:text-5xl font-heading font-bold mb-6">
+              Interactive Tools for
+              <span className="block text-equine-accent">Safer Horse Transactions</span>
+            </h1>
+            <p className="text-xl text-equine-sage mb-8 leading-relaxed">
+              Use our free tools to build contracts, check your rights, and protect yourself in horse purchases and sales.
+            </p>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-            {interactiveTools.filter(tool => tool.featured).map((tool, index) => (
-              <ToolCard tool={tool} key={index} />
-            ))}
+        {/* Featured Tools */}
+        <section className="py-16 bg-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-12">
+              <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">Most Popular Tools</h2>
+              <p className="text-lg text-equine-forest">Start with these essential tools used by thousands of horse buyers and sellers.</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+              {interactiveTools.filter(tool => tool.featured).map((tool, index) => (
+                <ToolCard tool={tool} key={index} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Quick Tools */}
-      <section className="py-16 bg-equine-warm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12">
-            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">Quick Reference Tools</h2>
-            <p className="text-lg text-equine-forest">Fast access to essential checklists and templates.</p>
+        {/* Quick Tools */}
+        <section className="py-16 bg-equine-warm">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-12">
+              <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">Quick Reference Tools</h2>
+              <p className="text-lg text-equine-forest">Fast access to essential checklists and templates.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {quickTools.map((tool, index) => (
+                <Card key={index} className="shadow-md hover:shadow-lg transition-all duration-300 border-0 group cursor-pointer">
+                  <CardHeader className="text-center">
+                    <div className="mx-auto bg-equine-accent p-3 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300 w-fit">
+                      <tool.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <CardTitle className="text-lg font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
+                      {tool.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <p className="text-equine-forest mb-6">
+                      {tool.description}
+                    </p>
+                    <Button size="sm" variant="outline" className="border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white">
+                      Access Tool
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {quickTools.map((tool, index) => (
-              <Card key={index} className="shadow-md hover:shadow-lg transition-all duration-300 border-0 group cursor-pointer">
-                <CardHeader className="text-center">
-                  <div className="mx-auto bg-equine-accent p-3 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300 w-fit">
-                    <tool.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-lg font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
-                    {tool.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-equine-forest mb-6">
-                    {tool.description}
-                  </p>
-                  <Button size="sm" variant="outline" className="border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white">
-                    Access Tool
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+        {/* All Tools */}
+        <section className="py-16 bg-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-12">
+              <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">All Interactive Tools</h2>
+              <p className="text-lg text-equine-forest">Complete collection of tools to help you navigate horse transactions safely.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {interactiveTools.map((tool, index) => (
+                <ToolCard tool={tool} key={index} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* All Tools */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12">
-            <h2 className="text-3xl font-heading font-bold text-equine-navy mb-4">All Interactive Tools</h2>
-            <p className="text-lg text-equine-forest">Complete collection of tools to help you navigate horse transactions safely.</p>
+        {/* CTA Section */}
+        <section className="hero-gradient py-16 relative">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 className="text-3xl lg:text-4xl font-heading font-bold text-white mb-6">
+              Have a Specific Question?
+            </h2>
+            <p className="text-xl text-equine-sage mb-8">
+              Browse our learning guides for detailed explanations, or check out our news section to see how these tools work in practice.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/learn" className="block">
+                <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest-light font-semibold px-8 py-4 text-lg w-full">
+                  Browse Learning Guides
+                </Button>
+              </Link>
+              <Link to="/news" className="block">
+                <Button size="lg" className="bg-white text-equine-navy hover:bg-gray-200 font-semibold px-8 py-4 text-lg w-full">
+                  View News
+                </Button>
+              </Link>
+            </div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {interactiveTools.map((tool, index) => (
-              <ToolCard tool={tool} key={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="hero-gradient py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-heading font-bold text-white mb-6">
-            Have a Specific Question?
-          </h2>
-          <p className="text-xl text-equine-sage mb-8">
-            Browse our learning guides for detailed explanations, or check out our news section to see how these tools work in practice.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest-light font-semibold px-8 py-4 text-lg">
-              Browse Learning Guides
-            </Button>
-            <Link to="/news">
-              <Button size="lg" className="bg-white text-equine-navy hover:bg-gray-200 font-semibold px-8 py-4 text-lg">
-                View News
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 };
 

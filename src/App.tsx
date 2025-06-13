@@ -26,52 +26,61 @@ import DisputeResolutionWizard from './pages/wizards/DisputeResolutionWizard';
 import Contact from './pages/Contact';
 import NotFound from "./pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { useEffect } from 'react';
+import { supabase } from './lib/supabaseClient';
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Router>
-          <AuthProvider>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/learn" element={<Learn />} />
-              <Route path="/tools" element={<Tools />} />
-              <Route path="/news" element={<News />} />
-              <Route path="/news/:id" element={<ArticlePage />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/token-expired" element={<TokenExpired />} />
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+const App = () => {
+  useEffect(() => {
+    // Force refresh the session from storage/cookies on app load
+    supabase.auth.getSession();
+  }, []);
 
-              {/* Learn Pages */}
-              <Route path="/learn/returns-and-refunds" element={<Returns />} />
-              <Route path="/learn/sale-and-loan-contracts" element={<Contracts />} />
-              <Route path="/learn/dispute-resolution" element={<Disputes />} />
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Router>
+            <AuthProvider>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/learn" element={<Learn />} />
+                <Route path="/tools" element={<Tools />} />
+                <Route path="/news" element={<News />} />
+                <Route path="/news/:id" element={<ArticlePage />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/token-expired" element={<TokenExpired />} />
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
-              {/* Tool Pages */}
-              <Route path="/tools/red-flag-detector" element={<RedFlagDetector />} />
+                {/* Learn Pages */}
+                <Route path="/learn/returns" element={<Returns />} />
+                <Route path="/learn/sale-and-loan-contracts" element={<Contracts />} />
+                <Route path="/learn/dispute-resolution" element={<Disputes />} />
 
-              {/* Wizards */}
-              <Route path="/wizards/dispute-resolution" element={<DisputeResolutionWizard />} />
+                {/* Tool Pages */}
+                <Route path="/tools/red-flag-detector" element={<RedFlagDetector />} />
 
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AuthProvider>
-        </Router>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+                {/* Wizards */}
+                <Route path="/wizards/dispute-resolution" element={<DisputeResolutionWizard />} />
+
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AuthProvider>
+          </Router>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
 
 export default App;
