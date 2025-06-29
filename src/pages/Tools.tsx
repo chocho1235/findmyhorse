@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Wrench, CheckCircle, FileText, Calculator, Shield, AlertTriangle, ShieldQuestion, User } from 'lucide-react';
+import { ArrowRight, Wrench, CheckCircle, FileText, Calculator, Shield, AlertTriangle, ShieldQuestion, User, Stethoscope } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
@@ -36,13 +36,16 @@ const ToolCard = ({ tool }) => {
               </Badge>
             </div>
           </div>
-          <span className="text-equine-forest text-sm">
-            {tool.time}
-          </span>
         </div>
-        <CardTitle className="text-xl font-heading text-equine-navy group-hover:text-equine-accent transition-colors">
+        <CardTitle className="text-xl font-heading text-equine-navy group-hover:text-equine-accent transition-colors mb-2">
           {tool.title}
         </CardTitle>
+        <div className="flex items-center text-equine-accent text-sm font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {tool.time}
+        </div>
       </CardHeader>
       <CardContent>
         <p className="text-equine-forest mb-6">
@@ -99,7 +102,7 @@ const Tools = () => {
   const interactiveTools = [
     {
       title: "Dispute Resolution Wizard",
-      description: "Get personalized steps for resolving your horse purchase dispute",
+      description: "Get personalised steps for resolving your horse purchase dispute",
       difficulty: "Intermediate",
       time: "8-12 minutes",
       icon: ShieldQuestion,
@@ -109,24 +112,26 @@ const Tools = () => {
       requiresAuth: true,
     },
     {
-      title: "Buyer Protection Checklist",
-      description: "Interactive checklist to ensure you're protected in your purchase",
-      difficulty: "Easy",
-      time: "5 minutes",
-      icon: Shield,
-      featured: false,
-      status: "Coming Soon",
-      link: "#"
+      title: "Veterinary Report Analyser",
+      description: "Interpret pre-purchase examination findings and understand their implications",
+      difficulty: "Intermediate",
+      time: "5-10 minutes",
+      icon: Stethoscope,
+      featured: true,
+      status: "Available",
+      link: "/tools/veterinary-report-analyser",
+      requiresAuth: false,
     },
     {
-      title: "Return Rights Calculator",
-      description: "Find out your return rights based on your situation and location",
+      id: 'buyer-protection',
+      title: 'Buyer Protection Checklist',
+      description: 'Interactive checklist to ensure you\'re protected in your purchase',
+      icon: Shield,
+      time: '5 minutes',
       difficulty: "Easy",
-      time: "3 minutes",
-      icon: Calculator,
-      featured: false,
-      status: "Coming Soon",
-      link: "#"
+      status: 'Available',
+      link: '/tools/buyer-protection-checklist',
+      requiresAuth: true,
     },
     {
       title: "Red Flag Detector",
@@ -139,15 +144,16 @@ const Tools = () => {
       link: "/tools/red-flag-detector"
     },
     {
-      title: "Contract Builder",
-      description: "Step-by-step tool to create a customized horse sale agreement",
+      id: 'scammer-database',
+      title: 'Scammer Database',
+      description: 'Search a list of known scammer names and stables',
+      icon: User,
+      time: '1 minute',
       difficulty: "Easy",
-      time: "10-15 minutes",
-      icon: FileText,
-      featured: false,
-      status: "Coming Soon",
-      link: "#"
-    }
+      status: 'Available',
+      link: '/tools/scammer-database',
+      requiresAuth: true,
+    },
   ];
 
   const quickTools = [
@@ -267,8 +273,8 @@ const Tools = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/learn" className="block">
                 <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest-light font-semibold px-8 py-4 text-lg w-full">
-                  Browse Learning Guides
-                </Button>
+                Browse Learning Guides
+              </Button>
               </Link>
               <Link to="/news" className="block">
                 <Button size="lg" className="bg-white text-equine-navy hover:bg-gray-200 font-semibold px-8 py-4 text-lg w-full">

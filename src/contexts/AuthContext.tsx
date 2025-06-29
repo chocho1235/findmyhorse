@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, MAX_LOGIN_ATTEMPTS, LOGIN_ATTEMPT_WINDOW, LoginAttempt } from '../lib/supabaseClient';
 import { Session, User as SupabaseUser } from '@supabase/supabase-js';
 
 export interface Profile {
@@ -91,7 +91,90 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [navigate]);
 
   const login = async (email: string, pass: string) => {
-    return await supabase.auth.signInWithPassword({ email: email, password: pass });
+    // Get client IP from request headers
+    const clientIP = window.location.hostname === 'localhost' ? '127.0.0.1' : 'unknown';
+
+    // Check if the account is locked
+    const { data: attemptData, error: attemptError } = await supabase
+      .from('login_attempts')
+      .select('*')
+      .eq('ip_address', clientIP)
+      .maybeSingle();
+
+    if (attemptError) {
+      console.error("Error checking login attempts:", attemptError);
+      throw new Error("An error occurred while checking login attempts. Please try again.");
+    }
+
+    const attempt: LoginAttempt = attemptData || {
+      ip_address: clientIP,
+      attempts: 0,
+      last_attempt: new Date().toISOString(),
+      locked_until: null
+    };
+
+    // Check if account is locked
+    if (attempt.locked_until && new Date(attempt.locked_until) > new Date()) {
+      const remainingTime = Math.ceil((new Date(attempt.locked_until).getTime() - new Date().getTime()) / 60000);
+      throw new Error(`Too many failed attempts. Please try again in ${remainingTime} minutes.`);
+    }
+
+    // Attempt login
+    const { data, error } = await supabase.auth.signInWithPassword({ 
+      email: email.toLowerCase().trim(), 
+      password: pass 
+    });
+
+    if (error) {
+      // Update login attempts
+      const newAttempts = (attempt.attempts || 0) + 1;
+      const now = new Date();
+      const lockedUntil = newAttempts >= MAX_LOGIN_ATTEMPTS 
+        ? new Date(now.getTime() + LOGIN_ATTEMPT_WINDOW).toISOString()
+        : null;
+
+      const { error: upsertError } = await supabase
+        .from('login_attempts')
+        .upsert({
+          ip_address: clientIP,
+          attempts: newAttempts,
+          last_attempt: now.toISOString(),
+          locked_until: lockedUntil
+        }, {
+          onConflict: 'ip_address'
+        });
+
+      if (upsertError) {
+        console.error("Error updating login attempts:", upsertError);
+      }
+
+      if (newAttempts >= MAX_LOGIN_ATTEMPTS) {
+        throw new Error(`Too many failed attempts. Please try again in 15 minutes.`);
+      }
+
+      const remainingAttempts = MAX_LOGIN_ATTEMPTS - newAttempts;
+      throw new Error(`Invalid login credentials. ${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} remaining.`);
+    }
+
+    // Reset login attempts on successful login
+    if (attempt.attempts > 0) {
+      const { error: upsertError } = await supabase
+        .from('login_attempts')
+        .upsert({
+          ip_address: clientIP,
+          attempts: 0,
+          last_attempt: new Date().toISOString(),
+          locked_until: null
+        }, {
+          onConflict: 'ip_address'
+        });
+
+      if (upsertError) {
+        console.error("Error resetting login attempts:", upsertError);
+      }
+    }
+
+    return { data, error: null };
   };
 
   const signup = async (email: string, pass: string, username: string) => {

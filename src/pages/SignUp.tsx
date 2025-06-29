@@ -10,6 +10,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Eye, EyeOff, Loader2, Check, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabaseClient';
 
 const Requirement = ({ met, text }: { met: boolean; text: string }) => (
     <div className={`flex items-center text-sm ${met ? 'text-green-600' : 'text-zinc-500'}`}>
@@ -22,6 +23,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const { signup } = useAuth();
   const { toast } = useToast();
+  const [formError, setFormError] = useState<string | null>(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,6 +41,8 @@ const SignUp = () => {
     specialChar: false,
   });
 
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   useEffect(() => {
     setPasswordRequirements({
       length: password.length >= 8,
@@ -53,41 +57,27 @@ const SignUp = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+    setSuccessMessage(null);
     if (!allRequirementsMet) {
-        toast({
-            title: "Password does not meet requirements",
-            description: "Please ensure your password meets all the specified criteria.",
-            variant: "destructive",
-        });
+        setFormError("Please ensure your password meets all the specified criteria.");
         return;
     }
     if (password !== confirmPassword) {
-      toast({
-        title: "Passwords do not match",
-        description: "Please check your passwords and try again.",
-        variant: "destructive",
-      });
+      setFormError("Passwords do not match. Please check your passwords and try again.");
       return;
     }
     setIsLoading(true);
     try {
       const { error } = await signup(email, password, username);
-      if (error) throw error;
-      navigate('/verify-email'); 
-    } catch (error: any) {
-      if (error?.message?.includes('User already registered')) {
-        toast({
-          title: "Sign up failed",
-          description: "An account with this email address already exists. Please try logging in.",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Sign up failed",
-          description: error.message || "An unexpected error occurred. Please try again.",
-          variant: "destructive",
-        });
+      if (error) {
+        setFormError(error.message || "Registration failed. Please try again.");
+        setIsLoading(false);
+        return;
       }
+      setSuccessMessage("If an account with that email exists, a verification email has been sent. If you do not receive an email, the account may already be registered and confirmed.");
+    } catch (error: any) {
+      setFormError(error.message || "Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -183,6 +173,16 @@ const SignUp = () => {
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Account"}
               </Button>
             </form>
+            {formError && (
+              <div className="mt-4 text-sm text-red-600 text-center" role="alert">
+                {formError}
+              </div>
+            )}
+            {successMessage && (
+              <div className="mt-4 text-sm text-green-600 text-center" role="status">
+                {successMessage}
+              </div>
+            )}
             <div className="mt-6 text-center text-sm">
               Already have an account?{' '}
               <Link to="/login" className="font-medium text-equine-accent hover:underline">

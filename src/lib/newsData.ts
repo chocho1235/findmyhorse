@@ -2,7 +2,7 @@ export const newsArticles = [
   {
     id: "colic-vet-fee-dispute-2023",
     title: "Colic Surgery Fee Dispute: Owner v. Dealer",
-    summary: "A dealer refused to pay for emergency colic surgery after a horse sold to a private owner fell ill within 10 days. The court ruled in favor of the buyer, citing the Consumer Rights Act 2015.",
+    summary: "A dealer refused to pay for emergency colic surgery after a horse sold to a private owner fell ill within 10 days. The court ruled in favour of the buyer, citing the Consumer Rights Act 2015.",
     author: "FindMyHorse Team",
     content: [
       { type: 'paragraph', text: "In a landmark case that highlights the importance of consumer protection in horse sales, a dealer was found liable for veterinary costs after a horse developed severe colic within 10 days of purchase. The case, heard in Surrey County Court, involved a £7,000 emergency surgery bill and raised important questions about dealer responsibilities under the Consumer Rights Act 2015." },
@@ -41,7 +41,7 @@ export const newsArticles = [
       { type: 'subheading', text: "Damages Calculation" },
       { type: 'paragraph', text: "The court awarded £2,500 in damages, calculated based on: 1) The difference in market value between a 148cm and 140cm pony, 2) Lost competition opportunities, 3) Additional training costs incurred, 4) Transportation and competition entry fees that were wasted." },
       { type: 'subheading', text: "Industry Impact" },
-      { type: 'paragraph', text: "This case has led to increased awareness of the importance of accurate height measurement in competition horses. Many show organizations now require official height certificates, and buyers are increasingly requesting independent height verification before purchase." },
+      { type: 'paragraph', text: "This case has led to increased awareness of the importance of accurate height measurement in competition horses. Many show organisations now require official height certificates, and buyers are increasingly requesting independent height verification before purchase." },
       { type: 'subheading', text: "Preventive Measures" },
       { type: 'paragraph', text: "To avoid similar disputes, sellers should: 1) Obtain official height certificates, 2) Use qualified measurers, 3) Document measurements with photographs, 4) Include specific height warranties in sales contracts. Buyers should: 1) Request independent measurement, 2) Verify competition eligibility, 3) Include height-specific terms in purchase agreements." }
     ],
@@ -59,18 +59,18 @@ export const newsArticles = [
     summary: "A horse sold by a dealer was found to have severe crib-biting and weaving vices. The buyer was granted a full refund after the court found non-disclosure.",
     author: "FindMyHorse Team",
     content: [
-      { type: 'paragraph', text: "A recent case in Lancashire has set an important precedent regarding the disclosure of stable vices in horse sales. The court ordered a full refund of £5,500 after finding that a dealer had failed to disclose severe crib-biting and weaving behaviors in a horse sold to a private buyer." },
+      { type: 'paragraph', text: "A recent case in Lancashire has set an important precedent regarding the disclosure of stable vices in horse sales. The court ordered a full refund of £5,500 after finding that a dealer had failed to disclose severe crib-biting and weaving behaviours in a horse sold to a private buyer." },
       { type: 'subheading', text: "Case Background" },
-      { type: 'paragraph', text: "The horse, a 6-year-old Warmblood, was purchased from a licensed dealer. The buyer discovered severe crib-biting and weaving behaviors within days of the horse arriving at their yard. These vices were not mentioned in the sales documentation or during the viewing process." },
+      { type: 'paragraph', text: "The horse, a 6-year-old Warmblood, was purchased from a licensed dealer. The buyer discovered severe crib-biting and weaving behaviours within days of the horse arriving at their yard. These vices were not mentioned in the sales documentation or during the viewing process." },
       { type: 'subheading', text: "Legal Arguments" },
       { type: 'paragraph', text: "The dealer argued that the vices developed after the sale due to the change in environment. However, veterinary evidence showed that the horse had been treated for dental issues consistent with long-term crib-biting. The court found that the dealer had a duty to disclose these vices under the Consumer Rights Act 2015." },
       { type: 'quote', text: "Stable vices that affect a horse's value, usability, or welfare must be disclosed to potential buyers. Non-disclosure constitutes a material breach of the duty to provide goods of satisfactory quality.", source: "Judge's Ruling" },
       { type: 'subheading', text: "Impact on Horse Value" },
-      { type: 'paragraph', text: "The court heard expert testimony that stable vices can significantly reduce a horse's value and may affect its insurability. The vices in this case were severe enough to impact the horse's usability and required specialized management." },
+      { type: 'paragraph', text: "The court heard expert testimony that stable vices can significantly reduce a horse's value and may affect its insurability. The vices in this case were severe enough to impact the horse's usability and required specialised management." },
       { type: 'subheading', text: "Legal Implications" },
-      { type: 'paragraph', text: "This case reinforces that dealers must disclose all known vices and behavioral issues. The court found that the buyer had the right to expect the horse to be free from undisclosed vices that would affect its value or usability." },
+      { type: 'paragraph', text: "This case reinforces that dealers must disclose all known vices and behavioural issues. The court found that the buyer had the right to expect the horse to be free from undisclosed vices that would affect its value or usability." },
       { type: 'subheading', text: "Preventive Measures" },
-      { type: 'paragraph', text: "To prevent similar disputes, dealers should: 1) Document all known vices, 2) Include behavioral assessments in pre-purchase examinations, 3) Provide written disclosure of any behavioral issues, 4) Consider offering trial periods for buyers to observe the horse in their environment." }
+      { type: 'paragraph', text: "To prevent similar disputes, dealers should: 1) Document all known vices, 2) Include behavioural assessments in pre-purchase examinations, 3) Provide written disclosure of any behavioural issues, 4) Consider offering trial periods for buyers to observe the horse in their environment." }
     ],
     outcome: "Full Refund",
     amount: "£5,500",
@@ -86,7 +86,7 @@ export const newsArticles = [
     summary: "A private buyer failed to recover costs after a horse developed lameness post-sale. The court found no misrepresentation.",
     author: "FindMyHorse Team",
     content: [
-      { type: 'paragraph', text: "A significant case in Kent highlighted the differences between private sales and dealer sales under UK law. The court dismissed a claim for damages after a horse developed lameness three weeks after a private sale, emphasizing the importance of understanding different legal protections in private transactions." },
+      { type: 'paragraph', text: "A significant case in Kent highlighted the differences between private sales and dealer sales under UK law. The court dismissed a claim for damages after a horse developed lameness three weeks after a private sale, emphasising the importance of understanding different legal protections in private transactions." },
       { type: 'subheading', text: "Case Details" },
       { type: 'paragraph', text: "The horse was sold privately for £4,000. The buyer arranged a pre-purchase examination which showed no signs of lameness. However, three weeks after purchase, the horse developed lameness in the right forelimb. The buyer sought to recover the purchase price and veterinary costs." },
       { type: 'subheading', text: "Legal Analysis" },

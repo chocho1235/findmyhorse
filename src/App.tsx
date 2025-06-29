@@ -28,6 +28,9 @@ import NotFound from "./pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { useEffect } from 'react';
 import { supabase } from './lib/supabaseClient';
+import BuyerProtectionChecklist from './pages/tools/BuyerProtectionChecklist';
+import ScammerDatabase from './pages/tools/ScammerDatabase';
+import VeterinaryReportAnalyser from './pages/tools/VeterinaryReportAnalyser';
 
 const queryClient = new QueryClient();
 
@@ -66,10 +69,13 @@ const App = () => {
                 <Route path="/learn/dispute-resolution" element={<Disputes />} />
 
                 {/* Tool Pages */}
-                <Route path="/tools/red-flag-detector" element={<RedFlagDetector />} />
+                <Route path="/tools/red-flag-detector" element={<ProtectedRoute><RedFlagDetector /></ProtectedRoute>} />
+                <Route path="/tools/buyer-protection-checklist" element={<ProtectedRoute><BuyerProtectionChecklist /></ProtectedRoute>} />
+                <Route path="/tools/scammer-database" element={<ProtectedRoute><ScammerDatabase /></ProtectedRoute>} />
+                <Route path="/tools/veterinary-report-analyser" element={<VeterinaryReportAnalyser />} />
 
                 {/* Wizards */}
-                <Route path="/wizards/dispute-resolution" element={<DisputeResolutionWizard />} />
+                <Route path="/wizards/dispute-resolution" element={<ProtectedRoute><DisputeResolutionWizard /></ProtectedRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="/contact" element={<Contact />} />

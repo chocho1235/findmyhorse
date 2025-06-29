@@ -14,14 +14,14 @@ const Learn = () => {
   const quickAnswers = [
     {
       question: "How long do I have to return a horse?",
-      answer: "Return periods vary by state and contract terms, typically ranging from 3-30 days for specific issues."
+      answer: "Return periods vary by region and contract terms, typically ranging from 3-30 days for specific issues."
     },
     {
       question: "Can I get my money back if the horse is lame?",
       answer: "Depends on pre-existing conditions, warranties in your contract, and whether lameness was disclosed."
     },
     {
-      question: "What if the seller won't honor the return policy?",
+      question: "What if the seller won't honour the return policy?",
       answer: "Document everything, review your contract, and consider mediation before legal action."
     }
   ];

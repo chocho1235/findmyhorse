@@ -8,3 +8,16 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey) 
+
+// Define the maximum number of login attempts allowed
+export const MAX_LOGIN_ATTEMPTS = 5;
+export const LOGIN_ATTEMPT_WINDOW = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+// Define the login attempts table type
+export interface LoginAttempt {
+  id: string;
+  ip_address: string;
+  attempts: number;
+  last_attempt: string;
+  locked_until: string | null;
+} 

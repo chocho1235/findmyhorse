@@ -8,35 +8,26 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from "@/components/ui/use-toast"
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setIsLoading(true);
     try {
       const { error } = await login(email, password);
       if (error) throw error;
-
-      toast({
-        title: "Login Successful",
-        description: "Welcome back!",
-      });
       navigate('/dashboard');
     } catch (error: any) {
-      toast({
-        title: "Login Failed",
-        description: error.error_description || error.message,
-        variant: "destructive",
-      });
+      setError(error.message || "An unexpected error occurred. Please try again.");
       console.error("Login failed:", error);
     } finally {
       setIsLoading(false);
@@ -80,6 +71,11 @@ const Login = () => {
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              {error && (
+                <div className="text-sm text-red-500 mt-2">
+                  {error}
+                </div>
+              )}
               <Button type="submit" className="w-full bg-equine-accent hover:bg-equine-forest" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Login

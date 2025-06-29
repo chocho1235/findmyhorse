@@ -3,15 +3,21 @@ import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { Progress } from "@/components/ui/progress"
-import { CheckCircle, Wrench, Loader2 } from 'lucide-react';
+import { CheckCircle, Wrench, Loader2, BookOpen, Shield, FileText, ChevronRight } from 'lucide-react';
 import { allLearningTopics } from '@/lib/content';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/components/ui/use-toast"
+
+interface UserProgress {
+  completed_modules: string[];
+  last_accessed: string;
+  quiz_scores: Record<string, number>;
+}
 
 const Dashboard = () => {
   const { user, logout, profile, updateProfile, loading: authLoading } = useAuth();
@@ -23,6 +29,12 @@ const Dashboard = () => {
   const [canUpdate, setCanUpdate] = useState(true);
   const [nextUpdateDate, setNextUpdateDate] = useState<Date | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(true);
+  const [progressError, setProgressError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +83,70 @@ const Dashboard = () => {
     }
   }, [user, profile]);
 
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    let cancelled = false;
+    if (!user) {
+      setLoadingProgress(false);
+      return;
+    }
+
+    const fetchUserProgress = async (attempt = 1) => {
+      setLoadingProgress(true);
+      setProgressError(null);
+      try {
+        timeout = setTimeout(() => {
+          if (!cancelled) {
+            setProgressError('Failed to load progress. Please try again.');
+            setLoadingProgress(false);
+          }
+        }, 10000); // 10 seconds
+
+        const { data, error } = await supabase
+          .from('user_progress')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        clearTimeout(timeout);
+        if (error) throw error;
+        if (!cancelled) {
+          setUserProgress(data);
+          setLoadingProgress(false);
+          setProgressError(null);
+        }
+      } catch (error) {
+        clearTimeout(timeout);
+        if (attempt < 3 && !cancelled) {
+          setTimeout(() => fetchUserProgress(attempt + 1), 1000); // retry after 1s
+        } else if (!cancelled) {
+          setUserProgress(null);
+          setLoadingProgress(false);
+          setProgressError('Failed to load progress after several attempts. Please try again.');
+        }
+      }
+    };
+
+    fetchUserProgress();
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [user, retryCount]);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (!user) return;
+      const { data, error } = await supabase
+        .from("admin_users")
+        .select("email")
+        .eq("email", user.email)
+        .single();
+      setIsAdmin(!!data && !error);
+    };
+    checkAdmin();
+  }, [user]);
+
   const completedTopics = allLearningTopics.filter(topic => progress.includes(topic.id));
   const progressPercentage = (completedTopics.length / allLearningTopics.length) * 100;
 
@@ -97,6 +173,21 @@ const Dashboard = () => {
     } finally {
       setIsUpdating(false);
     }
+  };
+
+  const getModuleProgress = (moduleId: string) => {
+    if (!userProgress) return 0;
+    return userProgress.completed_modules.includes(moduleId) ? 100 : 0;
+  };
+
+  const getQuizScore = (moduleId: string) => {
+    if (!userProgress) return 0;
+    return userProgress.quiz_scores[moduleId] || 0;
+  };
+
+  const getLastAccessedDate = () => {
+    if (!userProgress?.last_accessed) return 'Never';
+    return new Date(userProgress.last_accessed).toLocaleDateString();
   };
 
   if (!user) {
@@ -126,6 +217,11 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold font-heading text-gray-800">
               Welcome back, <span className="text-equine-accent">{profile?.username || 'user'}</span>!
             </h1>
+            {isAdmin && (
+              <div className="text-sm text-equine-accent font-semibold">
+                You are an admin.
+              </div>
+            )}
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -138,8 +234,13 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <Progress value={progressPercentage} className="mb-4" />
-                {loading ? (
+                {loadingProgress ? (
                     <p>Loading your progress...</p>
+                ) : progressError ? (
+                    <div className="text-red-600">
+                        {progressError}
+                        <button onClick={() => setRetryCount(c => c + 1)} className="ml-2 underline text-blue-600">Retry</button>
+                    </div>
                 ) : (
                     <ul className="space-y-2">
                         {completedTopics.map(topic => (
@@ -210,6 +311,60 @@ const Dashboard = () => {
                         </div>
                     </div>
                 )}
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Quick Actions */}
+            <Card className="col-span-full">
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button
+                    onClick={() => navigate('/tools')}
+                    className="flex items-center justify-between p-6 h-auto bg-white hover:bg-gray-50 border border-gray-200"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <Shield className="h-8 w-8 text-equine-accent" />
+                      <div className="text-left">
+                        <h3 className="font-semibold text-gray-900">Legal Tools</h3>
+                        <p className="text-sm text-gray-500">Access our legal tools</p>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                  </Button>
+
+                  <Button
+                    onClick={() => navigate('/resources')}
+                    className="flex items-center justify-between p-6 h-auto bg-white hover:bg-gray-50 border border-gray-200"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <FileText className="h-8 w-8 text-equine-accent" />
+                      <div className="text-left">
+                        <h3 className="font-semibold text-gray-900">Resources</h3>
+                        <p className="text-sm text-gray-500">Browse legal resources</p>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                  </Button>
+
+                  <Button
+                    onClick={() => navigate('/contact')}
+                    className="flex items-center justify-between p-6 h-auto bg-white hover:bg-gray-50 border border-gray-200"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <BookOpen className="h-8 w-8 text-equine-accent" />
+                      <div className="text-left">
+                        <h3 className="font-semibold text-gray-900">Contact Us</h3>
+                        <p className="text-sm text-gray-500">Get legal advice</p>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

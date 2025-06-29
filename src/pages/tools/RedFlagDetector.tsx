@@ -8,6 +8,16 @@ import Footer from '@/components/Footer';
 import { redFlags, greenFlags, RedFlag, GreenFlag } from '@/lib/redFlags';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 interface FoundRedFlag extends RedFlag {
   match: string;
@@ -27,10 +37,75 @@ interface AnalysisResult {
 }
 
 const RedFlagDetector = () => {
+  const { user } = useAuth();
   const [inputText, setInputText] = useState('');
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const MIN_CHARS = 50;
+
+  // If user is not authenticated, show the sign-up dialog
+  if (!user) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-50">
+        <Navigation />
+        <main className="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+          <div className="max-w-4xl mx-auto space-y-8">
+            <div className="text-center">
+              <h1 className="text-4xl font-extrabold font-heading text-gray-800 mb-4">
+                Equine Ad Intelligence Report
+              </h1>
+              <p className="text-xl text-gray-600">
+                Paste an advertisement below for a sophisticated analysis of potential risks.
+              </p>
+            </div>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="space-y-2">
+                  <Textarea
+                    placeholder="An honest horse, sold as seen. Needs an experienced rider as can be quirky..."
+                    className="w-full h-64 text-base"
+                    disabled
+                  />
+                  <div className="flex justify-between items-center text-sm text-gray-500">
+                    <span>Account required</span>
+                    <span>Sign up to use this tool</span>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="mt-4 w-full">
+                        Analyse Text
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="font-heading text-2xl">Account Required</DialogTitle>
+                        <DialogDescription>
+                          Please log in or create an account to use the Red Flag Detector.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <p>This tool is only available to registered users. Creating an account is free and gives you access to all of our tools and resources.</p>
+                      </div>
+                      <div className="flex justify-end space-x-4">
+                        <Link to="/login">
+                          <Button variant="outline">Login</Button>
+                        </Link>
+                        <Link to="/signup">
+                          <Button>Sign Up</Button>
+                        </Link>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   const analyseText = () => {
     if (inputText.length < MIN_CHARS) return;
@@ -129,23 +204,23 @@ const RedFlagDetector = () => {
           <Card>
             <CardContent className="p-6">
               <div className="space-y-2">
-                <Textarea
-                  placeholder="An honest horse, sold as seen. Needs an experienced rider as can be quirky..."
-                  className="w-full h-64 text-base"
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                />
+              <Textarea
+                placeholder="An honest horse, sold as seen. Needs an experienced rider as can be quirky..."
+                className="w-full h-64 text-base"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+              />
                 <div className="flex justify-between items-center text-sm text-gray-500">
                   <span>{inputText.length} characters</span>
-                  <span>{inputText.length < MIN_CHARS ? `Minimum ${MIN_CHARS} characters required` : 'Ready to analyze'}</span>
+                  <span>{inputText.length < MIN_CHARS ? `Minimum ${MIN_CHARS} characters required` : 'Ready to analyse'}</span>
                 </div>
                 <Button 
                   onClick={analyseText} 
                   className="mt-4 w-full" 
                   disabled={isLoading || inputText.length < MIN_CHARS}
                 >
-                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Analyse Text'}
-                </Button>
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Analyse Text'}
+              </Button>
               </div>
             </CardContent>
           </Card>

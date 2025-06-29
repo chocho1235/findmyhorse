@@ -51,6 +51,15 @@ export const redFlags: RedFlag[] = [
     advice: 'Request all vet records related to this issue. Your vet must perform a thorough examination with these specific conditions in mind.',
     checkNegations: true
   },
+  {
+    id: 'no_novices',
+    pattern: /no (complete(ly)? )?novices?|no (total|absolute|real|true) beginners?|not for (a )?(novices?|beginners?|first timers?|inexperienced|nervous riders?)|not suitable for (a )?(novices?|beginners?|first timers?|inexperienced|nervous riders?)|please no (complete(ly)? )?novices?|please no (total|absolute|real|true) beginners?|no first timers?|not for first timers?|no inexperienced|not suitable for inexperienced|no nervous riders?|not for nervous riders?/i,
+    category: 'Experience',
+    severity: 3,
+    label: 'No Novices / No Beginners',
+    explanation: 'Phrases like "no novices" or "not for beginners" are a major red flag. They indicate the horse is likely unsuitable for inexperienced or less confident riders, and may have behavioural or training issues that require an advanced handler.',
+    advice: 'If you are not a highly experienced rider, avoid horses with this warning. Even for experienced riders, clarify exactly what issues the horse has and why it is not suitable for novices.'
+  },
 
   // --- Severity 2: CONCERN ---
   {
@@ -250,9 +259,9 @@ export const redFlags: RedFlag[] = [
     pattern: /prefers company|hates being alone|needs a companion/i,
     category: 'Behaviour',
     severity: 1,
-    label: 'Prefers Company / Hates Being Alone',
-    explanation: 'This suggests potential separation anxiety, which can manifest as calling, fence-walking, or stress when other horses leave.',
-    advice: 'Consider your stabling situation. Will the horse have constant companionship? This can be a significant management challenge.'
+    label: 'Prefers Company / Needs Companion',
+    explanation: 'This horse may become anxious or stressed when separated from other horses. It requires careful management in a livery yard or when travelling.',
+    advice: 'Consider your yard setup and whether you can accommodate this need. This is not necessarily a problem but requires planning.'
   },
   {
     id: 'travels_better_in_company',
@@ -621,6 +630,24 @@ export const redFlags: RedFlag[] = [
     label: 'Sales Pressure Language',
     explanation: 'These are classic marketing tactics designed to create a sense of urgency and encourage a quick decision. They are often used to rush buyers and discourage thorough checks.',
     advice: 'Completely ignore this language. It has no bearing on the quality of the horse. Stick to your own timeline and process of due diligence.'
+  },
+  {
+    id: 'push_button_ride',
+    pattern: /push-button ride|easy off the leg|voice responsive/i,
+    category: 'Training',
+    severity: 1,
+    label: 'Push-Button / Responsive Ride',
+    explanation: 'Indicates a well-trained horse that is highly responsive to the rider\'s aids, making it easy and enjoyable to ride.',
+    advice: 'This is a positive trait, but ensure the horse is not overly sensitive or reactive to the aids.'
+  },
+  {
+    id: 'bombproof_and_steady',
+    pattern: /bombproof|steady in open spaces|doesn\'t hot up|good in traffic|not spooky/i,
+    category: 'Behaviour',
+    severity: 1,
+    label: 'Bombproof and Steady',
+    explanation: 'While no horse is truly bombproof, this group of terms strongly suggests an exceptionally calm and reliable horse that isn\'t easily frightened.',
+    advice: 'While this is a positive trait, still test the horse in various situations to verify its temperament.'
   }
 ];
 
@@ -798,8 +825,8 @@ export const greenFlags: GreenFlag[] = [
     id: 'competition_experience',
     pattern: /competed at|eventing potential|dressage prospect|jumping machine|placed regularly|used to shows/i,
     category: 'Experience',
-    label: 'Competition Experience / Potential',
-    explanation: 'A strong positive for competitive riders, indicating the horse has experience in a competition environment or shows clear potential.'
+    label: 'Competition Experience',
+    explanation: 'Indicates the horse has been exposed to competition environments and has shown potential or success in specific disciplines.'
   },
   {
     id: 'brave_jumper',

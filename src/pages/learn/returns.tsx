@@ -47,15 +47,15 @@ const Returns = () => {
         twitterCard="summary_large_image"
         structuredData={structuredData}
       />
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      
         <main className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Back Button */}
           <Link to="/learn" className="inline-flex items-center text-equine-forest hover:text-equine-accent mb-8">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Learning Guides
-          </Link>
+            </Link>
 
           {/* Header */}
           <div className="text-center mb-12">
@@ -65,17 +65,17 @@ const Returns = () => {
             <p className="text-xl text-equine-forest">
               Understanding your rights and responsibilities when returning a horse
             </p>
-          </div>
+        </div>
 
           {/* Quick Answer Box */}
           <Card className="border-0 shadow-lg mb-8">
-            <CardContent className="p-6">
+                        <CardContent className="p-6">
               <h2 className="text-2xl font-heading font-bold text-equine-navy mb-4">Quick Answer</h2>
               <div className="bg-blue-50 p-6 rounded-lg">
                 <h3 className="text-xl font-semibold text-blue-800 mb-2">How long do I have to return a horse?</h3>
                 <p className="text-blue-700 mb-4">
                   Return periods vary by seller type and contract terms:
-                </p>
+                          </p>
                 <ul className="space-y-2 text-blue-700">
                   <li className="flex items-start">
                     <CheckCircle className="h-5 w-5 mr-2 mt-1" />
@@ -88,11 +88,11 @@ const Returns = () => {
                   <li className="flex items-start">
                     <CheckCircle className="h-5 w-5 mr-2 mt-1" />
                     <span>Private sales: Depends on contract terms and misrepresentation</span>
-                  </li>
-                </ul>
+                              </li>
+                          </ul>
               </div>
-            </CardContent>
-          </Card>
+                        </CardContent>
+                      </Card>
 
           {/* Main Content */}
           <div className="space-y-8">
@@ -109,16 +109,16 @@ const Returns = () => {
                   <div className="bg-green-50 p-6 rounded-lg text-center">
                     <BarChart2 className="h-8 w-8 text-green-600 mx-auto mb-3" />
                     <div className="text-3xl font-bold text-green-800 mb-2">60%</div>
-                    <p className="text-green-700">of returns are due to undisclosed health conditions or behavioral issues</p>
+                    <p className="text-green-700">of returns are due to undisclosed health conditions or behavioural issues</p>
                   </div>
                   <div className="bg-purple-50 p-6 rounded-lg text-center">
                     <PieChart className="h-8 w-8 text-purple-600 mx-auto mb-3" />
                     <div className="text-3xl font-bold text-purple-800 mb-2">92%</div>
                     <p className="text-purple-700">of successful returns involve proper veterinary documentation</p>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </div>
+                </CardContent>
+              </Card>
 
             {/* Key Points */}
             <Card className="border-0 shadow-lg">
@@ -134,10 +134,10 @@ const Returns = () => {
                   </li>
                   <li className="flex items-start">
                     <AlertTriangle className="h-6 w-6 text-equine-accent mr-3 mt-1" />
-                    <div>
+                      <div>
                       <h3 className="font-semibold text-equine-navy">Document Everything</h3>
                       <p className="text-equine-forest">Keep records of all communications, veterinary reports, and any issues you discover.</p>
-                    </div>
+                      </div>
                   </li>
                   <li className="flex items-start">
                     <FileText className="h-6 w-6 text-equine-accent mr-3 mt-1" />
@@ -238,14 +238,14 @@ const Returns = () => {
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
             {/* Common Return Reasons */}
             <Card className="border-0 shadow-lg">
               <CardContent className="p-6">
                 <h2 className="text-2xl font-heading font-bold text-equine-navy mb-4">Common Return Reasons</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-gray-50 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">Return Reasons by Percentage</h3>
                     <div className="space-y-4">
@@ -334,7 +334,7 @@ const Returns = () => {
 
             {/* When You Can Return */}
             <Card className="border-0 shadow-lg">
-              <CardContent className="p-6">
+                <CardContent className="p-6">
                 <h2 className="text-2xl font-heading font-bold text-equine-navy mb-4">When You Can Return a Horse</h2>
                 <div className="space-y-6">
                   <div>
@@ -365,15 +365,15 @@ const Returns = () => {
                       <li>Failed to provide promised documentation</li>
                       <li>Not fulfilled agreed-upon conditions</li>
                       <li>Misrepresented the horse's history</li>
-                    </ul>
+                  </ul>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
             {/* The Return Process */}
             <Card className="border-0 shadow-lg">
-              <CardContent className="p-6">
+                <CardContent className="p-6">
                 <h2 className="text-2xl font-heading font-bold text-equine-navy mb-4">The Return Process</h2>
                 <div className="space-y-6">
                   <div>
@@ -406,11 +406,11 @@ const Returns = () => {
                       <li>Document the horse's condition</li>
                       <li>Get written confirmation of the return</li>
                       <li>Ensure safe transportation</li>
-                    </ul>
+                  </ul>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
             {/* What to Do If Seller Refuses */}
             <Card className="border-0 shadow-lg">
@@ -432,24 +432,24 @@ const Returns = () => {
                     <p className="text-equine-forest">
                       The process can be complex and emotionally challenging. Consider seeking support from equine legal professionals and support groups.
                     </p>
-                  </div>
-                </div>
+            </div>
+          </div>
               </CardContent>
             </Card>
 
             {/* CTA */}
             <div className="text-center mt-12">
               <Link to="/tools">
-                <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest">
+              <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest">
                   Try Our Interactive Tools
-                </Button>
+              </Button>
               </Link>
-            </div>
           </div>
-        </main>
+        </div>
+      </main>
 
-        <Footer />
-      </div>
+      <Footer />
+    </div>
     </>
   );
 };

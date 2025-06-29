@@ -1,15 +1,40 @@
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import { AlertTriangle, Target, BookOpen, Users, Heart, Shield } from 'lucide-react';
+import { AlertTriangle, Target, BookOpen, Users, Heart, Shield, Calculator, Gavel, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import MetaTags from '@/components/seo/MetaTags';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const About = () => {
+  const features = [
+    {
+      icon: BookOpen,
+      title: "Comprehensive Learning Guides",
+      description: "Clear, practical guides covering horse buying, selling, returns, and legal rights."
+    },
+    {
+      icon: Calculator,
+      title: "Interactive Tools",
+      description: "Red flag detectors, dispute resolution wizards, and protection checklists."
+    },
+    {
+      icon: Gavel,
+      title: "Legal Case Analysis",
+      description: "Real-world examples and outcomes to help you understand how the law applies."
+    },
+    {
+      icon: Shield,
+      title: "Buyer Protection Focus",
+      description: "Specialized resources to help buyers navigate purchases safely and confidently."
+    }
+  ];
+
   return (
     <>
       <MetaTags
-        title="About FindMyHorse - Our Mission and Story"
-        description="Learn about FindMyHorse's mission to support and educate the equestrian community with practical advice and resources."
+        title="About FindMyHorse - UK Equestrian Legal Guidance"
+        description="Learn about FindMyHorse's mission to provide clear, practical legal guidance for UK horse buyers, sellers, and owners through interactive tools and educational resources."
       />
       <div className="flex flex-col min-h-screen bg-background">
         <Navigation />
@@ -22,7 +47,7 @@ const About = () => {
                   About FindMyHorse
                 </h1>
                 <p className="text-xl text-equine-sage leading-relaxed">
-                  Your trusted guide for navigating the complexities of UK equine law.
+                  Your trusted source for practical equestrian legal guidance in the UK.
                 </p>
               </div>
             </div>
@@ -40,10 +65,30 @@ const About = () => {
                     <h2 className="text-3xl font-bold font-heading text-equine-navy">Our Mission</h2>
                   </div>
                   <p className="text-equine-forest leading-relaxed text-lg">
-                    Our mission is to foster a fair, transparent, and educated equestrian community in the UK. We are dedicated to making equine law accessible and understandable for all, empowering both buyers and sellers to act with confidence. By providing clear, reliable legal information and practical tools, we aim to demystify complex topics and help prevent disputes before they arise.
+                    We exist to make equestrian legal guidance accessible, understandable, and actionable for everyone in the UK horse community. Whether you're buying your first horse or managing a yard, we provide the practical tools and clear guidance you need to navigate legal challenges with confidence.
                   </p>
                 </CardContent>
               </Card>
+
+              {/* What We Offer */}
+              <div>
+                <h2 className="text-3xl font-bold font-heading text-equine-navy mb-8 text-center">What We Offer</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {features.map((feature, index) => (
+                    <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="bg-equine-accent/10 p-3 rounded-lg w-fit mb-4">
+                          <feature.icon className="h-6 w-6 text-equine-accent" />
+                        </div>
+                        <h3 className="text-xl font-bold font-heading text-equine-navy mb-3">{feature.title}</h3>
+                        <p className="text-equine-forest">
+                          {feature.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
 
               {/* Philosophy Section */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -52,9 +97,9 @@ const About = () => {
                     <div className="bg-equine-accent/10 p-3 rounded-lg w-fit mb-4">
                       <Users className="h-6 w-6 text-equine-accent" />
                     </div>
-                    <h3 className="text-xl font-bold font-heading text-equine-navy mb-3">For Buyers & Sellers Alike</h3>
+                    <h3 className="text-xl font-bold font-heading text-equine-navy mb-3">For Everyone</h3>
                     <p className="text-equine-forest">
-                      We believe in a level playing field. The law is here to protect everyone, and our resources are designed to provide balanced, impartial guidance.
+                      From first-time buyers to experienced dealers, our resources are designed to help everyone understand their rights and responsibilities.
                     </p>
                   </CardContent>
                 </Card>
@@ -62,11 +107,11 @@ const About = () => {
                 <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="bg-equine-accent/10 p-3 rounded-lg w-fit mb-4">
-                      <BookOpen className="h-6 w-6 text-equine-accent" />
+                      <CheckCircle className="h-6 w-6 text-equine-accent" />
                     </div>
-                    <h3 className="text-xl font-bold font-heading text-equine-navy mb-3">Education for Empowerment</h3>
+                    <h3 className="text-xl font-bold font-heading text-equine-navy mb-3">Practical & Actionable</h3>
                     <p className="text-equine-forest">
-                      Knowledge is the best protection. We are committed to educating the public about the legalities of the equine world.
+                      We focus on real-world solutions you can actually use, not dense legal theory that's hard to understand.
                     </p>
                   </CardContent>
                 </Card>
@@ -76,9 +121,9 @@ const About = () => {
                     <div className="bg-equine-accent/10 p-3 rounded-lg w-fit mb-4">
                       <Shield className="h-6 w-6 text-equine-accent" />
                     </div>
-                    <h3 className="text-xl font-bold font-heading text-equine-navy mb-3">A Voice for Truth</h3>
+                    <h3 className="text-xl font-bold font-heading text-equine-navy mb-3">Always Free</h3>
                     <p className="text-equine-forest">
-                      In a world of complex transactions, clarity and honesty are paramount. Our platform stands for truth and integrity.
+                      Our mission is education and empowerment, not profit. All our guides and tools are completely free to use.
                     </p>
                   </CardContent>
                 </Card>
@@ -95,11 +140,38 @@ const About = () => {
                   </div>
                   <div className="space-y-4 text-equine-forest leading-relaxed text-lg">
                     <p>
-                      FindMyHorse was developed by a team of equine professionals and enthusiasts, combining their passion for horses with their expertise in various aspects of horse care and management.
+                      FindMyHorse was born from a simple observation: too many horse buyers and sellers were getting caught up in disputes that could have been prevented with better information and preparation.
                     </p>
                     <p>
-                      As experienced horse owners and professionals with a shared love for all things equine, we identified a need for accessible, practical guidance in the equestrian community. This platform is the result of our efforts to provide valuable information and support for horse owners, riders, and enthusiasts across the UK.
+                      We saw people struggling to understand their rights, unsure about return policies, and caught off guard by problems that experienced professionals would have spotted immediately. The legal information that existed was often buried in complex documents or expensive to access.
                     </p>
+                    <p>
+                      So we built FindMyHorse to bridge that gap - providing clear, practical guidance that anyone can understand and use. Our interactive tools help you identify red flags, understand your rights, and take the right steps when problems arise.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* CTA Section */}
+              <Card className="border-0 shadow-lg bg-equine-warm">
+                <CardContent className="p-8 text-center">
+                  <h2 className="text-3xl font-bold font-heading text-equine-navy mb-4">Ready to Get Started?</h2>
+                  <p className="text-equine-forest text-lg mb-6">
+                    Explore our guides and tools to protect yourself in your next horse transaction.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link to="/learn">
+                      <Button size="lg" className="bg-equine-accent text-white hover:bg-equine-forest">
+                        <BookOpen className="mr-2 h-5 w-5" />
+                        Browse Learning Guides
+                      </Button>
+                    </Link>
+                    <Link to="/tools">
+                      <Button size="lg" variant="outline" className="border-equine-accent text-equine-accent hover:bg-equine-accent hover:text-white">
+                        <Calculator className="mr-2 h-5 w-5" />
+                        Try Interactive Tools
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -111,17 +183,17 @@ const About = () => {
                     <div className="bg-red-100 p-3 rounded-lg">
                       <AlertTriangle className="h-8 w-8 text-red-600" />
                     </div>
-                    <h2 className="text-3xl font-bold font-heading text-red-800">Legal Disclaimer</h2>
+                    <h2 className="text-3xl font-bold font-heading text-red-800">Important Legal Notice</h2>
                   </div>
                   <div className="space-y-4 text-red-700 leading-relaxed">
                     <p>
-                      The content provided on FindMyHorse is for informational purposes only. While we strive to provide accurate and up-to-date information, we recommend consulting with qualified professionals for specific advice about your horse.
+                      The information provided on FindMyHorse is for educational purposes only and does not constitute legal advice. While we strive to provide accurate and up-to-date information, laws and regulations can change.
                     </p>
                     <p>
-                      This website is not a substitute for professional veterinary, farrier, or training advice. We strongly recommend that you consult with qualified professionals for advice on your specific situation.
+                      For specific legal matters or complex situations, we strongly recommend consulting with a qualified solicitor who specializes in equine law. Our tools and guides are designed to help you understand general principles and prepare for professional consultations.
                     </p>
                     <p>
-                      We disclaim any and all liability for any loss or damage arising from your reliance on any information provided on this site.
+                      We disclaim any liability for decisions made based on information provided on this site. Always seek professional advice for your specific circumstances.
                     </p>
                   </div>
                 </CardContent>

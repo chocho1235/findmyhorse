@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import MetaTags from '@/components/seo/MetaTags';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const insights = [
   {
@@ -192,7 +192,8 @@ const NewsPage = () => {
                   <CardContent>
                     <div className="flex items-center gap-3 mb-4">
                       <Avatar className="h-8 w-8">
-                        <AvatarFallback>{article.author ? article.author[0] : '?'}</AvatarFallback>
+                        <AvatarImage src="/Untitled design (37).png" alt="FindMyHorse Team" />
+                        <AvatarFallback>{article.author ? article.author[0] : 'F'}</AvatarFallback>
                       </Avatar>
                       <span className="text-sm text-equine-forest font-medium">{article.author}</span>
                     </div>
@@ -275,9 +276,10 @@ const NewsPage = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center gap-3 mb-2">
-                      <Avatar className="h-7 w-7">
-                        <AvatarFallback>{article.author ? article.author[0] : '?'}</AvatarFallback>
+                    <div className="flex items-center gap-3 mb-4">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src="/Untitled design (37).png" alt="FindMyHorse Team" />
+                        <AvatarFallback>{article.author ? article.author[0] : 'F'}</AvatarFallback>
                       </Avatar>
                       <span className="text-sm text-equine-forest font-medium">{article.author}</span>
                     </div>

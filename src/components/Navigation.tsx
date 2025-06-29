@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { FileText, Menu, X, User, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,11 +13,15 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { supabase } from '@/lib/supabaseClient';
+import { useToast } from '@/components/ui/use-toast';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { user, profile, logout, loading } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const navLinks = [
     { label: 'Learn', path: '/learn' },
@@ -36,6 +40,22 @@ const Navigation = () => {
     return name.charAt(0).toUpperCase();
   }
 
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: 'Logout failed',
+        description: error.message || 'An error occurred while logging out.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoggingOut(false);
+    }
+  };
+
   const renderAuthControls = () => {
     if (loading) {
       return null; // Or a loading spinner
@@ -45,7 +65,7 @@ const Navigation = () => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full" disabled={loggingOut}>
               <Avatar className="h-8 w-8">
                 <AvatarImage src="/avatars/01.png" alt={profile.username} />
                 <AvatarFallback>{getInitials(profile.username)}</AvatarFallback>
@@ -69,7 +89,7 @@ const Navigation = () => {
               Profile
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout} className="cursor-pointer">
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -100,7 +120,7 @@ const Navigation = () => {
           <DropdownMenuItem asChild>
             <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => { logout(); setIsMenuOpen(false); }} className="flex items-center space-x-2 cursor-pointer">
+          <DropdownMenuItem onClick={async () => { await handleLogout(); setIsMenuOpen(false); }} className="flex items-center space-x-2 cursor-pointer" disabled={loggingOut}>
              <LogOut className="h-4 w-4" />
              <span>Logout</span>
           </DropdownMenuItem>
@@ -131,7 +151,7 @@ const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="group-hover:scale-110 transition-transform duration-300">
-              <img src="/Untitled design (36).png" alt="FindMyHorse Logo" className="h-16 w-auto" />
+              <img src="/Untitled design (37).png" alt="FindMyHorse Logo" className="h-16 w-auto" />
             </div>
             <div className="text-equine-navy">
               <h1 className="text-xl font-heading font-bold">FindMyHorse</h1>
